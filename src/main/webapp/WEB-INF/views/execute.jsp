@@ -10,7 +10,6 @@
 </head>
 <body>
 	execute.jsp page
-
 	<br/>
 
 	<br/>
@@ -19,7 +18,6 @@
 	<input type="radio" name="survay" value="disagree"> 반대 <br/>
 	<input type="button" value ="결과 확인" onclick="result_get()">
 
-	
 	<script>
 	
 		function result_get(){
