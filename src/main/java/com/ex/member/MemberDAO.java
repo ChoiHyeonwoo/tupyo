@@ -16,21 +16,22 @@ public class MemberDAO extends BaseDAO{
 		super();
 	}
 	// register
-	public void register(String id, String password, String name){
-		
+	public String register(String id, String password, String name){
+		String result = "";
 		try{
 			
 			//connection
 			connection = super.dataSource.getConnection();
-			String query = "";
+			String query = "insert into chw_member () values (?,?,?,Y, sysdate, , chw_member_seq.nextval)";
 			//preparedStatement
 			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, id);
+			preparedStatement.setString(2, password);
+			preparedStatement.setString(3, name);
 			
+			int rn = preparedStatement.executeUpdate();
 			
-			
-			
-			//sql send
-			
+			result = "success";
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -49,6 +50,7 @@ public class MemberDAO extends BaseDAO{
 			}
 			
 		}
+		return result;
 		
 	}
 

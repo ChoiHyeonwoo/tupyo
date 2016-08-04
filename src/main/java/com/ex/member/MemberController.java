@@ -11,5 +11,5 @@ public class MemberController {
 		
 		return "m_register";
 	}
-
+	
 }
