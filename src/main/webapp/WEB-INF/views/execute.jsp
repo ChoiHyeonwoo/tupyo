@@ -10,9 +10,7 @@
 </head>
 <body>
 	execute.jsp page
-	<script>
-		alert(${id});
-	</script>
+
 	<br/>
 
 	<br/>
@@ -30,6 +28,7 @@
 				id: ${id},
 				survay: survay
 			});
+			alert("가입 성공");
 			location.href ="/tupyo";
 
 		}
