@@ -22,17 +22,27 @@ public class MemberDAO extends BaseDAO{
 			
 			//connection
 			connection = super.dataSource.getConnection();
-			
+			String query = "";
 			//preparedStatement
+			preparedStatement = connection.prepareStatement(query);
+			
+			
+			
 			
 			//sql send
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		finally{
 			try{
 				// connection dispose
-				
+				if(connection!=null)
+					connection.close();
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
 				
 			}catch(Exception e){
 				e.printStackTrace();
