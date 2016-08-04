@@ -7,15 +7,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-
-
 		아이디 : <input type = "text" name="id"/> <br />
 		비밀번호 : <input type = "password" name="password"/><br /> 
 		비밀번호 확인 : <input type = "password" name="password_confirm"/><br />
 		이름: <input type = "text" name="name"/> <br />
 		<input type="button" onclick="member_reg()" value="회원가입" /> <input type="button" value="취소" />
-
-	<script>
+<script>
 	// 다시 수정 
 		function member_reg(){
 			var survay = $(':radio[name="survay"]:checked').val();
@@ -27,6 +24,6 @@
 			location.href ="/tupyo";
 
 		}
-	</script>
+</script>
 </body>
 </html>
