@@ -58,7 +58,7 @@ public class MemberController {
 		request.getSession().setAttribute("pk_id", ""+mdtos.get(0).pk_mid);
 		request.getSession().setAttribute("id", mdtos.get(0).id);
 		request.getSession().setAttribute("name", mdtos.get(0).name);
-		
+		request.getSession().setMaxInactiveInterval(300);
 		model.addAttribute("mdtos", mdtos);
 
 		return "redirect:/";
@@ -82,8 +82,34 @@ public class MemberController {
 		
 		return "/m_check_update";
 	}
-	
-	
+	@RequestMapping("/m_update")
+	public String update(HttpServletRequest request, HttpServletResponse response, Model model){
 
+		model.addAttribute("request", request);
+				
+		return "/m_update";
+	}
+	@RequestMapping(value = "/m_update_complete", method=RequestMethod.POST)
+	public String update_complete(HttpServletRequest request, Model model){
+		
+		
+		model.addAttribute("request", request);
+		
+		String pk_id = (String)request.getSession().getAttribute("pk_id");
+		String id = request.getParameter("logid");
+		String password = request.getParameter("password");
+		String name = request.getParameter("name");
+		
+		MemberDAO mdao = new MemberDAO();
+		mdao.update(pk_id, id, password, name);
+
+		
+		request.getSession().setAttribute("id", id);
+		request.getSession().setAttribute("name", name);
+		request.getSession().setMaxInactiveInterval(300);
+
+		
+		return "redirect:/";
+	}
 	
 }

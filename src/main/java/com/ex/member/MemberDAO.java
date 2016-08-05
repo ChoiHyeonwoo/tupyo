@@ -187,40 +187,21 @@ public class MemberDAO extends BaseDAO{
 		
 		
 	}
-	
-	public ArrayList<MemberDTO> retrive_infomation(String logid, String logpassword){
-
-		ArrayList<MemberDTO> mdtos = new ArrayList<MemberDTO>();
+	public void update(String pk_lid, String n_id, String n_password, String n_name){
 		try{
 			//connection
 			connection = super.dataSource.getConnection();
 
 			//preparedStatement
-			String query1 = "select * from chw_member where id = ?";
-			preparedStatement = connection.prepareStatement(query1);
-			preparedStatement.setString(1, logid);
-
-			resultSet = preparedStatement.executeQuery();
-
-			if (resultSet.next()){
-				
-				if(logpassword.equals(resultSet.getString("password"))){
-					String id = logid;
-					String password = resultSet.getString("password");
-					String name = resultSet.getString("name");
-					String curr_user =  resultSet.getString("curr_user");
-					Date reg_date = resultSet.getDate("reg_date");
-					Date drop_date = resultSet.getDate("drop_date");
-					int pk_mid = resultSet.getInt("pk_mid");
-					
-					MemberDTO mdto = new MemberDTO(id, password, name, curr_user, reg_date, drop_date, pk_mid);
-					
-					mdtos.add(mdto);
-					
-				}
-				
+			String query2 = "update chw_member set id=?, password=?, name=? where pk_mid=?";
 			
-			}
+			preparedStatement = connection.prepareStatement(query2);
+			preparedStatement.setString(1, n_id);
+			preparedStatement.setString(2, n_password);
+			preparedStatement.setString(3, n_name);
+			preparedStatement.setInt(4, Integer.parseInt(pk_lid));
+			int rn = preparedStatement.executeUpdate();
+
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -241,6 +222,7 @@ public class MemberDAO extends BaseDAO{
 			
 		}
 		
-		return mdtos;
 	}
+	
+	
 }
