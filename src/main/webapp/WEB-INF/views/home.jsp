@@ -36,6 +36,7 @@
 	
 	<a href = "/tupyo/register">투표 등록하기</a><br />
 	<a href = "/tupyo/m_login">로그인</a>&nbsp;&nbsp;<a href = "/tupyo/m_logout">로그아웃</a>&nbsp;&nbsp; <a href = "/tupyo/m_register">회원가입 하기</a><br/>
-	<a href = "/tupyo/m_check_update">회원정보수정</a>
+	<a href = "/tupyo/m_check_update">회원정보수정</a>&nbsp;&nbsp;<a href = "/tupyo/m_check_destroy">회원탈퇴</a>
+	
 </body>
 </html>

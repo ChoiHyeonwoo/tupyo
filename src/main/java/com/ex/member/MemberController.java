@@ -75,7 +75,7 @@ public class MemberController {
 		
 		return "redirect:/";
 	}
-	@RequestMapping("/m_check_update")
+	@RequestMapping(value="/m_check_update", method=RequestMethod.POST)
 	public String check_update(HttpServletRequest request, HttpServletResponse response, Model model){
 		
 		model.addAttribute("request", request);
@@ -111,5 +111,26 @@ public class MemberController {
 		
 		return "redirect:/";
 	}
+	@RequestMapping("/m_check_destroy")
+	public String check_destroy(HttpServletRequest request, HttpServletResponse response, Model model){
+		
+		model.addAttribute("request", request);
+		
+		return "/m_check_destroy";
+	}
+	@RequestMapping(value = "/m_destroy", method=RequestMethod.POST)
+	public String destroy(HttpServletRequest request, HttpServletResponse response, Model model){
+		
+		model.addAttribute("request", request);
+		
+		String pk_id = (String)request.getSession().getAttribute("pk_id");
+		MemberDAO mdao = new MemberDAO();
+		mdao.destroy(pk_id);
+		
+		request.getSession().invalidate();
+
+		return "/m_destroy";
+	}
+	
 	
 }

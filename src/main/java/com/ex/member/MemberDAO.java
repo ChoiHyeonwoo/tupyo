@@ -223,6 +223,41 @@ public class MemberDAO extends BaseDAO{
 		}
 		
 	}
-	
+	public void destroy(String pk_lid){
+		try{
+			//connection
+			connection = super.dataSource.getConnection();
+
+			//preparedStatement
+			String query2 = "update chw_member set password=?, name=?, drop_date=sysdate where pk_mid=?";
+			
+			preparedStatement = connection.prepareStatement(query2);
+			preparedStatement.setString(1, null);
+			preparedStatement.setString(2, null);
+			preparedStatement.setInt(3, Integer.parseInt(pk_lid));
+			
+			int rn = preparedStatement.executeUpdate();
+
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				// connection dispose
+				if(connection!=null)
+					connection.close();
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+		}
+		
+	}
 	
 }

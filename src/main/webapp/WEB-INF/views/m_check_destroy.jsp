@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
-	<% 
+<% 
 		HttpSession session = request.getSession();
 		String id = (String)session.getAttribute("id");
 		String pk_id = (String)session.getAttribute("pk_id");
@@ -27,13 +27,12 @@
 	</script>
 </head>
 <body>
-	M_CHECK_UPDATE.JSP
+M_destroy_UPDATE.JSP
 	
 	<h1>비밀번호를 입력해 주시기 바랍니다.</h1>
-	<form action="/tupyo/m_update" method="POST">
+	<form action="/tupyo/m_destroy" method="POST">
 		비밀번호 입력 : <input type="password" name="curr_password" /></br>
 		<input type="submit" value="확인"/>
 	</form>
-
 </body>
 </html>
