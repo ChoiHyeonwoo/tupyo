@@ -1,6 +1,9 @@
 package com.ex.member;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +20,7 @@ public class MemberController {
 		return "m_register";
 	}
 	@RequestMapping(value = "/m_confirm", method=RequestMethod.POST)
-	public void confirm(HttpServletRequest request, Model model){
+	public String confirm(HttpServletRequest request, Model model){
 		
 		model.addAttribute("request", request);
 		
@@ -29,7 +32,58 @@ public class MemberController {
 		String confirm = mdao.register(id, password, name);
 		
 		model.addAttribute("confirm", confirm);
+		
+		return "m_confirm";
 	
 	}
+	@RequestMapping("/m_login")
+	public String login(Model model){
+		
+		
+		return "m_login";
+	}
+	@RequestMapping("/m_check")
+	public String check(HttpServletRequest request, Model model){
+		
+		ArrayList<MemberDTO> mdtos = new ArrayList<MemberDTO>();
+		model.addAttribute("request", request);
+		
+		String id = request.getParameter("logid");
+		String password = request.getParameter("logpw");
+		
+		MemberDAO mdao = new MemberDAO();
+		mdtos = mdao.login_check(id, password);
+		
+	
+		request.getSession().setAttribute("pk_id", ""+mdtos.get(0).pk_mid);
+		request.getSession().setAttribute("id", mdtos.get(0).id);
+		request.getSession().setAttribute("name", mdtos.get(0).name);
+		
+		model.addAttribute("mdtos", mdtos);
+
+		return "redirect:/";
+	}
+	@RequestMapping("/m_logout")
+	public String logout(HttpServletRequest request, HttpServletResponse response){
+		
+		String loglid = (String)request.getSession().getAttribute("id");
+		MemberDAO mdao = new MemberDAO();
+		mdao.logout(loglid);
+		
+		request.getSession().invalidate();
+			
+		
+		return "redirect:/";
+	}
+	@RequestMapping("/m_check_update")
+	public String check_update(HttpServletRequest request, HttpServletResponse response, Model model){
+		
+		model.addAttribute("request", request);
+		
+		return "/m_check_update";
+	}
+	
+	
+
 	
 }

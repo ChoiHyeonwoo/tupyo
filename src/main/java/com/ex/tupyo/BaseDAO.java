@@ -40,8 +40,7 @@ public class BaseDAO {
 			String query = "select * from chw_tupyo";
 			preparedStatement = connection.prepareStatement(query);
 			resultSet = preparedStatement.executeQuery();
-			
-			System.out.println("row : "+resultSet.getRow());
+
 			while(resultSet.next()){
 			
 				int id = resultSet.getInt("id");

@@ -8,7 +8,17 @@
 	<title>Home</title>
 </head>
 
-<body>
+<body>		
+	<% 
+		HttpSession session = request.getSession();
+		String id = (String)session.getAttribute("id");
+		String pk_id = (String)session.getAttribute("pk_id");
+		String name= (String)session.getAttribute("name");
+		
+		out.println(id);
+		out.println(name);
+		out.println(pk_id);
+	%>
 <h1>
 	투표목록입니다.
 </h1>
@@ -25,6 +35,7 @@
 	<br />
 	
 	<a href = "/tupyo/register">투표 등록하기</a><br />
-	<a href = "/">로그인</a>&nbsp;&nbsp; <a href = "/tupyo/m_register">회원가입 하기</a>
+	<a href = "/tupyo/m_login">로그인</a>&nbsp;&nbsp;<a href = "/tupyo/m_logout">로그아웃</a>&nbsp;&nbsp; <a href = "/tupyo/m_register">회원가입 하기</a><br/>
+	<a href = "/tupyo/m_check_update">회원정보수정</a>
 </body>
 </html>
