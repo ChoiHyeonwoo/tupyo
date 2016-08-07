@@ -16,20 +16,32 @@
 <script>
 	// 다시 수정 
 		function member_reg(){
-		
+
 			var id = $("#logid").val();
 			var password = $("#password").val();
 			var password_confirm = $("#password_confirm").val();
 			var name = $("#name").val();
-						
-			$.post("/tupyo/m_confirm", {
-				id: id,
-				password: password,
-				name: name
-			});
-			alert("가입 성공. 로그인을 해주세요.");
-			location.href ="/tupyo";
-		
+			
+			if(id == ""){
+				alert("아이디를 입력해 주세요")
+			}else if(password == "" || password_confirm == "")
+			{
+				alert("비밀번호를 입력해 주세요")
+			}
+			else if(name == ""){
+				alert("이름을 입력해 주세요.")
+			}
+			else if(password!=password_confirm){
+				alert("비밀번호가 일치하지 않습니다.")
+			}
+			else{
+				$.post("/tupyo/m_confirm", {
+					id: id,
+					password: password,
+					name: name
+				});
+			}
+			
 	}
 </script>
 </body>

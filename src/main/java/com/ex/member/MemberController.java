@@ -53,6 +53,10 @@ public class MemberController {
 		
 		MemberDAO mdao = new MemberDAO();
 		mdtos = mdao.login_check(id, password);
+		if(mdtos.isEmpty()){
+			model.addAttribute("error", "아이디 비밀번호를 확인해 주세요.");
+			return "/m_login";
+		}
 		
 	
 		request.getSession().setAttribute("pk_id", ""+mdtos.get(0).pk_mid);
@@ -75,7 +79,7 @@ public class MemberController {
 		
 		return "redirect:/";
 	}
-	@RequestMapping(value="/m_check_update", method=RequestMethod.POST)
+	@RequestMapping("/m_check_update")
 	public String check_update(HttpServletRequest request, HttpServletResponse response, Model model){
 		
 		model.addAttribute("request", request);
@@ -91,7 +95,6 @@ public class MemberController {
 	}
 	@RequestMapping(value = "/m_update_complete", method=RequestMethod.POST)
 	public String update_complete(HttpServletRequest request, Model model){
-		
 		
 		model.addAttribute("request", request);
 		

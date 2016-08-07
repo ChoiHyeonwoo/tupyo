@@ -19,12 +19,14 @@ public class MemberDAO extends BaseDAO{
 	}
 	// register
 	public String register(String id, String password, String name){
-		String result = "";
-		try{
-			
+		String result = check_id(id);
+		if(result.equals("fail"))
+			return "error";
+		try{			
 			//connection
 			connection = super.dataSource.getConnection();
-			String query = "insert into chw_member (id, password, name, curr_user, reg_date, drop_date, pk_id ) values (?, ?, ?, 'y', sysdate, ?, chw_member_seq.nextval)";
+			
+			String query = "insert into chw_member (id, password, name, curr_user, reg_date, drop_date, pk_mid ) values (?, ?, ?, 'y', sysdate, ?, chw_member_seq.nextval)";
 			//preparedStatement
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, id);
@@ -33,7 +35,7 @@ public class MemberDAO extends BaseDAO{
 			preparedStatement.setString(4, null);
 			int rn = preparedStatement.executeUpdate();
 			
-			result = "success";
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -54,6 +56,46 @@ public class MemberDAO extends BaseDAO{
 		}
 		return result;
 		
+	}
+	
+	public String check_id(String logid){
+		String result ="";
+		try{			
+			//connection
+			connection = super.dataSource.getConnection();
+			String query = "select * from chw_member where id = ?";
+			//preparedStatement
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, logid);
+
+			 resultSet = preparedStatement.executeQuery();
+			if(resultSet.next()){
+				result = "fail";
+			}
+			else{
+				result = "success";	
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				// connection dispose
+				if(connection!=null)
+					connection.close();
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return result;
 	}
 	
 	public ArrayList<MemberDTO> login_check(String logid, String logpassword){
@@ -88,7 +130,6 @@ public class MemberDAO extends BaseDAO{
 					mdtos.add(mdto);
 					
 				}
-				
 			
 			}
 			
@@ -151,6 +192,10 @@ public class MemberDAO extends BaseDAO{
 			
 		}
 	public void logout(String loglid){
+		
+		if(loglid.equals(null)){
+			return;
+		}
 		
 		try{
 			//connection
@@ -229,12 +274,13 @@ public class MemberDAO extends BaseDAO{
 			connection = super.dataSource.getConnection();
 
 			//preparedStatement
-			String query2 = "update chw_member set password=?, name=?, drop_date=sysdate where pk_mid=?";
+			String query2 = "update chw_member set password=?, name=?, curr_user=?, drop_date=sysdate where pk_mid=?";
 			
 			preparedStatement = connection.prepareStatement(query2);
 			preparedStatement.setString(1, null);
 			preparedStatement.setString(2, null);
-			preparedStatement.setInt(3, Integer.parseInt(pk_lid));
+			preparedStatement.setString(3, "n");
+			preparedStatement.setInt(4, Integer.parseInt(pk_lid));
 			
 			int rn = preparedStatement.executeUpdate();
 
