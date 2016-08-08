@@ -22,7 +22,7 @@ public class BaseDAO {
 		try{
 			context = new InitialContext();
 			dataSource = (DataSource)context.lookup("java:/comp/env/jdbc/oracle");
-			connection = dataSource.getConnection();
+			
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -36,7 +36,7 @@ public class BaseDAO {
 		
 		
 		try{
-			
+			connection = dataSource.getConnection();
 			String query = "select * from chw_tupyo";
 			preparedStatement = connection.prepareStatement(query);
 			resultSet = preparedStatement.executeQuery();
@@ -47,8 +47,9 @@ public class BaseDAO {
 				String title = resultSet.getString("title");
 				int agree = resultSet.getInt("agree");
 				int disagree = resultSet.getInt("disagree");
+				String writer = resultSet.getString("writer");
 			
-				TupyoDTO dto = new TupyoDTO(id,title, agree, disagree);
+				TupyoDTO dto = new TupyoDTO(id,title, agree, disagree, writer);
 				
 				dtos.add(dto);
 			}
@@ -76,7 +77,7 @@ public class BaseDAO {
 		// result.jsp에서 결과 보여주기
 		ArrayList<TupyoDTO> dtos = new ArrayList<TupyoDTO>();
 		try{
-			
+			connection = dataSource.getConnection();
 			String query = "select * from chw_tupyo";
 			preparedStatement = connection.prepareStatement(query);
 			resultSet = preparedStatement.executeQuery();
@@ -86,8 +87,9 @@ public class BaseDAO {
 			String title = resultSet.getString("title");
 			int agree = resultSet.getInt("agree");
 			int disagree = resultSet.getInt("disagree");
+			String writer = resultSet.getString("writer");
 			
-			TupyoDTO dto = new TupyoDTO(id, title, agree, disagree);
+			TupyoDTO dto = new TupyoDTO(id, title, agree, disagree, writer);
 			dtos.add(dto);
 			
 		}
@@ -113,11 +115,83 @@ public class BaseDAO {
 		}
 		return dtos;
 	}
+	public String had_tupyo(String t_id, String t_member){
+		String result = "";
+		
+		try{
+			connection = dataSource.getConnection();			
+			String query = "select * from chw_tupyo_recode where t_id = ? and t_member =?";
+			
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, Integer.parseInt(t_id));
+			preparedStatement.setString(2, t_member);
+			
+			resultSet = preparedStatement.executeQuery();
+				
+		if (resultSet.next()){
+			result = "disavailable";			
+		}else{
+			result = "available";
+		}
+
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			
+			try{
+				
+				if(connection!=null)
+					connection.close();
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+		
+		}
+		return result;
+	}
+	public void tupyo_log(String t_id, String t_member, String t_content){
+		try{
+			connection = dataSource.getConnection();
+			String query = "insert into chw_tupyo_recode (pk_tid, t_id, t_member, t_content) values "
+					+ "(chw_tupyo_recode_seq.nextval, ?,?,?)";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, Integer.parseInt(t_id));
+			preparedStatement.setString(2, t_member);
+			preparedStatement.setString(3, t_content);
+			
+			int rn =  preparedStatement.executeUpdate();
+
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			
+			try{
+				
+				if(connection!=null)
+					connection.close();
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			
+		}
+	}
 	public void upHit(String result, String id){
 		
 		String query ="";
 		try{
-		
+			connection = dataSource.getConnection();
 			if(result.equals("agree"))
 			{
 				System.out.println("agree");
@@ -152,5 +226,38 @@ public class BaseDAO {
 		}
 		
 	}
-	
-}
+	public void reg_poll(String title, String writer){
+			
+			String query ="";
+			try{
+				connection = dataSource.getConnection();
+				query = "insert into chw_tupyo (id, title, agree, disagree, writer) values (chw_tupyo_seq.nextval, ?, ?, ?, ?)";
+				
+				preparedStatement = connection.prepareStatement(query);
+				preparedStatement.setString(1, title);
+				preparedStatement.setInt(2, 0);
+				preparedStatement.setInt(3, 0);
+				preparedStatement.setString(4, writer);
+				
+				int rn = preparedStatement.executeUpdate();	
+				
+			}catch(Exception e){
+				
+				e.printStackTrace();
+				
+			}finally{
+				try{
+					if(preparedStatement !=null){
+						preparedStatement.close();
+					}
+					if(connection !=null){
+						connection.close();
+					}	
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
+	}

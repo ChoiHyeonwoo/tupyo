@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,17 +38,25 @@ public class HomeController {
 	@RequestMapping(value = "/result", method=RequestMethod.GET)
 	public String result(Model model, HttpServletRequest request){
 		
+		HttpSession session = request.getSession();
+		String member_id = (String)session.getAttribute("id");
+		
 		model.addAttribute("request", request);
 		String result = request.getParameter("survay");
-		String id = request.getParameter("id");
+		String t_id = request.getParameter("id");
 		
 		BaseDAO dao = new BaseDAO();
-		dao.upHit(result, id);
-	
-		
-		model.addAttribute("result", result);
-		System.out.println("result : " + result);
-		System.out.println("id : " + result);
+		String is_tupyo=dao.had_tupyo(t_id, member_id);
+		if(is_tupyo.equals("available")){
+			dao.upHit(result, t_id);		
+			dao.tupyo_log(t_id, member_id, result);
+			model.addAttribute("result", result);
+			System.out.println("result : " + result);
+			System.out.println("id : " + result);	
+		}else{
+			
+						
+		}
 		return "result";
 		
 	}
@@ -61,6 +70,27 @@ public class HomeController {
 		model.addAttribute("id", id);
 		
 		return "execute";
+	}
+	
+	@RequestMapping(value = "/register")
+	public String register(HttpServletRequest request, Model model){
+		
+		model.addAttribute("request", request);
+		
+		return "register";
+	}
+	@RequestMapping(value = "/register_confirm")
+	public String register_confirm(HttpServletRequest request, Model model){
+		
+		model.addAttribute("request", request);
+		
+		String poll_title = request.getParameter("title");
+		String writer = request.getParameter("writer");
+		
+		BaseDAO dao = new BaseDAO();
+		dao.reg_poll(poll_title, writer);
+		
+		return "register";
 	}
 	
 }

@@ -14,9 +14,56 @@ public class MemberDAO extends BaseDAO{
 	PreparedStatement preparedStatement;
 	ResultSet resultSet;
 	
+
 	public MemberDAO(){
 		super();
 	}
+	public String check_password(String id, String password){
+		String result = "";
+		String opassword = "";
+		try{			
+			//connection
+			connection = super.dataSource.getConnection();
+			
+			String query = "select * from chw_member where id = ?";
+			//preparedStatement
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, id);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if(resultSet.next()){
+				opassword = resultSet.getString("password");
+				
+			}
+			
+			if(password.equals(opassword)){
+				result="success";
+			}
+			else{
+				result="error";
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				// connection dispose
+				if(connection!=null)
+					connection.close();
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+		}
+		return result;
+	}
+	
 	// register
 	public String register(String id, String password, String name){
 		String result = check_id(id);
@@ -232,6 +279,47 @@ public class MemberDAO extends BaseDAO{
 		
 		
 	}
+	public void update_log(String loglid){
+		
+		if(loglid.equals(null)){
+			return;
+		}
+		
+		try{
+			//connection
+			connection = super.dataSource.getConnection();
+
+			//preparedStatement
+			String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content) values (chw_mlog_seq.nextval, ?, sysdate, ?)";
+			
+			preparedStatement = connection.prepareStatement(query2);
+			preparedStatement.setString(1, loglid);
+			preparedStatement.setString(2, "info_update");
+			
+			int rn = preparedStatement.executeUpdate();
+
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				// connection dispose
+				if(connection!=null)
+					connection.close();
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+	}
 	public void update(String pk_lid, String n_id, String n_password, String n_name){
 		try{
 			//connection
@@ -245,6 +333,7 @@ public class MemberDAO extends BaseDAO{
 			preparedStatement.setString(2, n_password);
 			preparedStatement.setString(3, n_name);
 			preparedStatement.setInt(4, Integer.parseInt(pk_lid));
+			
 			int rn = preparedStatement.executeUpdate();
 
 			

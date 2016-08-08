@@ -1,9 +1,11 @@
 package com.ex.member;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +38,24 @@ public class MemberController {
 		return "m_confirm";
 	
 	}
+	
+	@RequestMapping(value= "/m_check_id", method=RequestMethod.POST)
+	public void check_id(HttpServletResponse response, HttpServletRequest request, Model model){
+		String id = request.getParameter("id");
+		
+		MemberDAO mdao = new MemberDAO();
+		String result = mdao.check_id(id);
+		System.out.println(result);
+		
+		try {
+			response.getWriter().print(result);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+
+	}
+	
 	@RequestMapping("/m_login")
 	public String login(Model model){
 		
@@ -99,13 +119,13 @@ public class MemberController {
 		model.addAttribute("request", request);
 		
 		String pk_id = (String)request.getSession().getAttribute("pk_id");
-		String id = request.getParameter("logid");
+		String id = request.getParameter("id");
 		String password = request.getParameter("password");
 		String name = request.getParameter("name");
 		
 		MemberDAO mdao = new MemberDAO();
 		mdao.update(pk_id, id, password, name);
-
+		mdao.update_log(id);
 		
 		request.getSession().setAttribute("id", id);
 		request.getSession().setAttribute("name", name);
@@ -114,14 +134,62 @@ public class MemberController {
 		
 		return "redirect:/";
 	}
+	
+	@RequestMapping(value="/m_password_check", method=RequestMethod.POST)
+	public void password_check_update(HttpServletResponse response, HttpServletRequest request, Model model)
+	{
+		model.addAttribute("request", request);
+		
+		HttpSession session = request.getSession();
+		String id = (String)session.getAttribute("id");
+		String password = request.getParameter("password");
+		
+		MemberDAO mdao = new MemberDAO();
+		String check_password = mdao.check_password(id, password); 
+		
+		System.out.println("패스워드 확인 결과: " +check_password);
+		model.addAttribute("result",check_password);
+		
+		try {
+			response.getWriter().print(check_password);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+		
+	}
+//	@RequestMapping("/m_pwd_check_destroy")
+//	public String password_check_destroy(HttpServletRequest request, HttpServletResponse response, Model model){
+//		
+//		model.addAttribute("request", request);
+//		HttpSession session = request.getSession();
+//		String id = (String)session.getAttribute("id");
+//		String password = request.getParameter("password");
+//		
+//		MemberDAO mdao = new MemberDAO();
+//		String check_password = mdao.check_password(id, password); 
+//		
+//		System.out.println("패스워드 확인 결과: " +check_password);
+//		model.addAttribute("result",check_password);
+//		
+//		if(check_password.equals("success")){
+//			return "/m_check_destroy";
+//		}else{
+//			
+//			return "error"; 
+//		}
+//	}
+	
 	@RequestMapping("/m_check_destroy")
 	public String check_destroy(HttpServletRequest request, HttpServletResponse response, Model model){
 		
 		model.addAttribute("request", request);
 		
+		
 		return "/m_check_destroy";
+		
 	}
-	@RequestMapping(value = "/m_destroy", method=RequestMethod.POST)
+	@RequestMapping(value = "/m_destroy")
 	public String destroy(HttpServletRequest request, HttpServletResponse response, Model model){
 		
 		model.addAttribute("request", request);

@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <title>Insert title here</title>
 	<% 
 		HttpSession session = request.getSession();
@@ -17,23 +18,70 @@
 
 	%>
 	<script>
-		var id = <%=id%>;
+		var id = "<%=id%>";
 		if (id == null)
 			{
 				alert("로그인 후에 이용바랍니다.");
 				location.href = "/tupyo";
 			}
+		
+		if("${result}" == "error"){
+			alert("다시 진행해 주시기 바랍니다.");
+		}
 		 
 	</script>
 </head>
 <body>
 	M_CHECK_UPDATE.JSP
 	
-	<h1>비밀번호를 입력해 주시기 바랍니다.</h1>
-	<form action="/tupyo/m_update" method="POST">
-		비밀번호 입력 : <input type="password" name="curr_password" /></br>
-		<input type="submit" value="확인"/>
-	</form>
+	<h1>비밀번호를 입력해 주시기 바랍니다.</h1><br />
 
+		비밀번호 입력 : <input type="password" id="curr_password" /> <br />
+		<input type="button" onclick="pwd_check()" value="확인"/>
+
+
+	<script>
+	function pwd_check(){
+		var password = $("#curr_password").val();
+		
+		$.ajax({
+			method: "POST",
+			
+			url: "/tupyo/m_password_check",
+			data: {
+				password: password
+			},
+			success: function(result){
+				alert(result);
+				if(result=="error"){
+					alert("비밀번호를 다시 입력해주세요");
+				}
+				else{
+					location.href="/tupyo/m_update";
+				}
+			},
+		});
+			
+	}
+// 	$.ajax({
+// 		method: "POST",
+// 		url: "/tupyo/m_password_check",
+// 		data: {
+// 			id: logid
+// 		},
+// 		success: function(){
+// 			$("#id_check_result").html("사용가능한 아이디 입니다.");
+// 		},
+// 		//beforeSend:showRequest,
+// 		error: function(e){
+// 			alert(e.responseText);
+// 			//error handling
+// 		}
+		
+// 	});
+	
+	
+
+	</script>
 </body>
 </html>
