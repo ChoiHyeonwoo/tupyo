@@ -35,20 +35,33 @@
 
 	<br/>
 
-	<input type="radio" name="survay" value="agree"> 찬성 <br/>
-	<input type="radio" name="survay" value="disagree"> 반대 <br/>
-	<input type="button" value ="결과 확인" onclick="result_get()">
+	<input type="radio" name="survay" value="agree" /> 찬성 <br />
+	<input type="radio" name="survay" value="disagree" /> 반대 <br />
+	<input type="button" value ="결과 확인" onclick="result_get()" />
+
 
 	<script>
-
 		function result_get(){
 			var survay = $(':radio[name="survay"]:checked').val();
-			$.get("/tupyo/result", {
-				id: ${id},
-				survay: survay
+			$.ajax({
+				method: "GET",
+				url: "/tupyo/result",		
+				data:{ 
+					id: ${id},
+					survay: survay
+				},
+			success: function(e){
+
+				var result = e.split(',');
+
+				if(result[0]=="available" || result[1]=="yes"){
+					alert("투표 완료");
+					location.href ="/tupyo";
+				}else{
+					alert("이미 투표한 항목입니다.");
+				}
+				}
 			});
-			alert("투표 완료");
-			location.href ="/tupyo";
 
 		}
 	</script>

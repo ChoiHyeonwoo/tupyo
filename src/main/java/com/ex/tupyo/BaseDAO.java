@@ -1,6 +1,7 @@
 package com.ex.tupyo;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,8 +49,11 @@ public class BaseDAO {
 				int agree = resultSet.getInt("agree");
 				int disagree = resultSet.getInt("disagree");
 				String writer = resultSet.getString("writer");
-			
-				TupyoDTO dto = new TupyoDTO(id,title, agree, disagree, writer);
+				String is_duplicated = resultSet.getString("is_duplicated");
+				Date reg_date = resultSet.getDate("reg_date");
+				
+				
+				TupyoDTO dto = new TupyoDTO(id,title, agree, disagree, writer, is_duplicated, reg_date);
 				
 				dtos.add(dto);
 			}
@@ -88,8 +92,10 @@ public class BaseDAO {
 			int agree = resultSet.getInt("agree");
 			int disagree = resultSet.getInt("disagree");
 			String writer = resultSet.getString("writer");
+			String is_duplicated = resultSet.getString("is_duplicated");
+			Date reg_date = resultSet.getDate("reg_date");
 			
-			TupyoDTO dto = new TupyoDTO(id, title, agree, disagree, writer);
+			TupyoDTO dto = new TupyoDTO(id, title, agree, disagree, writer, is_duplicated, reg_date);
 			dtos.add(dto);
 			
 		}
@@ -158,8 +164,8 @@ public class BaseDAO {
 	public void tupyo_log(String t_id, String t_member, String t_content){
 		try{
 			connection = dataSource.getConnection();
-			String query = "insert into chw_tupyo_recode (pk_tid, t_id, t_member, t_content) values "
-					+ "(chw_tupyo_recode_seq.nextval, ?,?,?)";
+			String query = "insert into chw_tupyo_recode (pk_tid, t_id, t_member, t_content, t_date) values "
+					+ "(chw_tupyo_recode_seq.nextval, ?,?,?, sysdate)";
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setInt(1, Integer.parseInt(t_id));
 			preparedStatement.setString(2, t_member);
@@ -187,24 +193,63 @@ public class BaseDAO {
 			
 		}
 	}
-	public void upHit(String result, String id){
+	public int[] getTupyoResult(String t_id){
+		String query = "";
+		int result_arr[] = new int[2];
+		int agree = 0;
+		int disagree = 0;
+		try{
+			connection = dataSource.getConnection();
+
+			System.out.println("agree");
+			query = "select * from chw_tupyo_recode where t_id = ?";
+
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, Integer.parseInt(t_id));
+			ResultSet resultSet = preparedStatement.executeQuery();	
+			
+			while(resultSet.next()){
+				if(resultSet.getString("t_content").equals("agree")){
+					agree++;
+				}
+				else{
+					disagree++;
+				}
+				
+			}
+			result_arr[0] = agree;
+			result_arr[1] = disagree;
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			
+		}finally{
+			try{
+				if(preparedStatement !=null){
+					preparedStatement.close();
+				}
+				if(connection !=null){
+					connection.close();
+				}	
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return result_arr;
+		
+	}
+	
+	public void upHit(String result, String t_id, int agree, int disagree){
 		
 		String query ="";
 		try{
 			connection = dataSource.getConnection();
-			if(result.equals("agree"))
-			{
-				System.out.println("agree");
-				query = "update chw_tupyo set agree = agree + 1 where id = ?";
-			}
-			else
-			{
-				System.out.println("disagree");
-				query = "update chw_tupyo set disagree = disagree + 1 where id = ?";
-			}
-			 
+			query = "update chw_tupyo set agree = ?, disagree = ? where id = ?";
+					 
 			preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setString(1, id);
+			preparedStatement.setInt(1, agree);
+			preparedStatement.setInt(2, disagree);
+			preparedStatement.setInt(3, Integer.parseInt(t_id));
 			
 			int rn = preparedStatement.executeUpdate();	
 			
@@ -226,18 +271,55 @@ public class BaseDAO {
 		}
 		
 	}
-	public void reg_poll(String title, String writer){
+	public String is_duplicated(String t_id){
+		String result = "";
+		
+		try{
+			connection = dataSource.getConnection();
+			String query = "select * from chw_tupyo where id = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, Integer.parseInt(t_id));
+			resultSet = preparedStatement.executeQuery();
+				
+		if(resultSet.next()){
+			String is_duplicated = resultSet.getString("is_duplicated");
+			
+			result = is_duplicated;
+		}
+
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			
+			try{
+				
+				if(connection!=null)
+					connection.close();
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+			
+	public void reg_poll(String title, String writer, String is_duplicated){
 			
 			String query ="";
 			try{
 				connection = dataSource.getConnection();
-				query = "insert into chw_tupyo (id, title, agree, disagree, writer) values (chw_tupyo_seq.nextval, ?, ?, ?, ?)";
+				query = "insert into chw_tupyo (id, title, agree, disagree, writer, is_duplicated, reg_date) values (chw_tupyo_seq.nextval, ?, ?, ?, ?, ?, sysdate)";
 				
 				preparedStatement = connection.prepareStatement(query);
 				preparedStatement.setString(1, title);
 				preparedStatement.setInt(2, 0);
 				preparedStatement.setInt(3, 0);
 				preparedStatement.setString(4, writer);
+				preparedStatement.setString(5, is_duplicated);
 				
 				int rn = preparedStatement.executeUpdate();	
 				

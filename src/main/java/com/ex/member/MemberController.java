@@ -125,7 +125,7 @@ public class MemberController {
 		
 		MemberDAO mdao = new MemberDAO();
 		mdao.update(pk_id, id, password, name);
-		mdao.update_log(id);
+		mdao.update_log(id, "info_update");
 		
 		request.getSession().setAttribute("id", id);
 		request.getSession().setAttribute("name", name);
@@ -158,27 +158,7 @@ public class MemberController {
 		
 		
 	}
-//	@RequestMapping("/m_pwd_check_destroy")
-//	public String password_check_destroy(HttpServletRequest request, HttpServletResponse response, Model model){
-//		
-//		model.addAttribute("request", request);
-//		HttpSession session = request.getSession();
-//		String id = (String)session.getAttribute("id");
-//		String password = request.getParameter("password");
-//		
-//		MemberDAO mdao = new MemberDAO();
-//		String check_password = mdao.check_password(id, password); 
-//		
-//		System.out.println("패스워드 확인 결과: " +check_password);
-//		model.addAttribute("result",check_password);
-//		
-//		if(check_password.equals("success")){
-//			return "/m_check_destroy";
-//		}else{
-//			
-//			return "error"; 
-//		}
-//	}
+
 	
 	@RequestMapping("/m_check_destroy")
 	public String check_destroy(HttpServletRequest request, HttpServletResponse response, Model model){
@@ -195,7 +175,10 @@ public class MemberController {
 		model.addAttribute("request", request);
 		
 		String pk_id = (String)request.getSession().getAttribute("pk_id");
+		String loglid = (String)request.getSession().getAttribute("id");
+		
 		MemberDAO mdao = new MemberDAO();
+		mdao.update_log(loglid, "destroy");
 		mdao.destroy(pk_id);
 		
 		request.getSession().invalidate();

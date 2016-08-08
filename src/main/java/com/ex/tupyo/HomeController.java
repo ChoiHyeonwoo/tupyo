@@ -1,9 +1,11 @@
 package com.ex.tupyo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -36,7 +38,7 @@ public class HomeController {
 		return "home";
 	}
 	@RequestMapping(value = "/result", method=RequestMethod.GET)
-	public String result(Model model, HttpServletRequest request){
+	public void result(HttpServletResponse response,Model model, HttpServletRequest request){
 		
 		HttpSession session = request.getSession();
 		String member_id = (String)session.getAttribute("id");
@@ -47,17 +49,25 @@ public class HomeController {
 		
 		BaseDAO dao = new BaseDAO();
 		String is_tupyo=dao.had_tupyo(t_id, member_id);
-		if(is_tupyo.equals("available")){
-			dao.upHit(result, t_id);		
+		String is_duplicated = dao.is_duplicated(t_id);
+		
+		if(is_tupyo.equals("available") || is_duplicated.equals("yes")){
+					
 			dao.tupyo_log(t_id, member_id, result);
+			int result_arr[] = dao.getTupyoResult(t_id); 
+			dao.upHit(result, t_id, result_arr[0], result_arr[1]);
+			
 			model.addAttribute("result", result);
 			System.out.println("result : " + result);
 			System.out.println("id : " + result);	
-		}else{
-			
-						
 		}
-		return "result";
+		try {
+			response.getWriter().print(is_tupyo+",");
+			response.getWriter().print(is_duplicated);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
 		
 	}
 	@RequestMapping(value = "/execute", method=RequestMethod.GET)
@@ -86,9 +96,10 @@ public class HomeController {
 		
 		String poll_title = request.getParameter("title");
 		String writer = request.getParameter("writer");
+		String is_duplicated = request.getParameter("duplicated");
 		
 		BaseDAO dao = new BaseDAO();
-		dao.reg_poll(poll_title, writer);
+		dao.reg_poll(poll_title, writer, is_duplicated);
 		
 		return "register";
 	}

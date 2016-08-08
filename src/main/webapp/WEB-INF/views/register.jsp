@@ -32,23 +32,32 @@
 	<br />
 	
 	투표제목 : <input type="text" id="poll_title" />
+	중복 여부: <input type="radio" name="repoll" value="yes" checked="checked" /> 허용 <input type="radio" name="repoll" value="no" />불가
 	<input type="button" value="투표등록" onclick="reg_poll()" />
 	<script>
 		function reg_poll(){
 			var poll_title = $("#poll_title").val();
-			var writer = "<%=name%>"
-			$.post("/tupyo/register_confirm", {
-				title: poll_title,
-				writer: writer
-			})
-			.done(function(msg){
-					alert("투표등록 완료.");
-					location.href = "/tupyo";
+			var writer = "<%=name%>";
+			var duplicated = $(':radio[name="repoll"]:checked').val();
+			if(poll_title ==""){
+				alert("투표제목을 작성해주세요");
+			}else if(duplicated ==""){
+				alert("중복여부를 선택해주세요")
+			}else{
+				$.post("/tupyo/register_confirm", {
+					title: poll_title,
+					writer: writer,
+					duplicated: duplicated
 				})
-			.fail(function(xhr, status, error){
-				// error handling
-				alert("error");
-			});
+				.done(function(msg){
+						alert("투표등록 완료.");
+						location.href = "/tupyo";
+					})
+				.fail(function(xhr, status, error){
+					// error handling
+					alert("error");
+				});
+			}
 		}
 	</script>
 

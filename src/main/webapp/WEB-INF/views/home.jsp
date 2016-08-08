@@ -45,6 +45,8 @@
 		
 			투표 제목 : ${dto.title}<br />
 			투표 작성자 : ${dto.writer}<br />
+			투표 중복허용 여부 : ${dto.is_duplicated}<br />
+			투표 등록 날짜 : ${dto.reg_date}<br />
 			찬성 : ${dto.agree}<br />
 			반대 : ${dto.disagree}<br />
 			

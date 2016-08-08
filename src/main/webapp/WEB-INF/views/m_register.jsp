@@ -57,6 +57,9 @@
 			else if(password!=password_confirm){
 				alert("비밀번호가 일치하지 않습니다.");
 			}
+			else if($("#id_check_result").html()=="" || $("#id_check_result").html()=="사용불가한 아이디 입니다. 다른 아이디 입력해 주세요."){
+				alert("아이디 중복체크를 확인해 주세요.");
+			}
 			else{
 				$.post("/tupyo/m_confirm", {
 					id: id,
@@ -67,11 +70,8 @@
 				.done(function(msg){
 						alert("가입완료. 로그인 해주시기 바랍니다.");
 						location.href = "/tupyo";
-					})
-				.fail(function(xhr, status, error){
-					// error handling
-					alert("error");
-				});
+				})
+
 			}
 			
 	}

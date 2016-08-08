@@ -6,6 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import com.ex.tupyo.BaseDAO;
 
 public class MemberDAO extends BaseDAO{
@@ -13,6 +18,15 @@ public class MemberDAO extends BaseDAO{
 	Connection connection;
 	PreparedStatement preparedStatement;
 	ResultSet resultSet;
+	
+	public String getIpAddress(){
+		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+        String ip = req.getHeader("X-FORWARDED-FOR");
+        if (ip == null)
+            ip = req.getRemoteAddr();
+         
+        return ip;
+	}
 	
 
 	public MemberDAO(){
@@ -176,7 +190,12 @@ public class MemberDAO extends BaseDAO{
 					
 					mdtos.add(mdto);
 					
+				}else{
+					update_log(logid, "login_fail");
 				}
+			
+			}else{
+				update_log(logid, "login_fail");
 			
 			}
 			
@@ -208,15 +227,16 @@ public class MemberDAO extends BaseDAO{
 				connection = super.dataSource.getConnection();
 	
 				//preparedStatement
-				String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content) values (chw_mlog_seq.nextval, ?, sysdate, ?)";
+				String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content, ip_address) values (chw_mlog_seq.nextval, ?, sysdate, ?, ?)";
 				
 				preparedStatement = connection.prepareStatement(query2);
 				preparedStatement.setString(1, loglid);
 				preparedStatement.setString(2, "Login");
+				preparedStatement.setString(3, getIpAddress());
 				
 				int rn = preparedStatement.executeUpdate();
 	
-				
+				System.out.println(getIpAddress());
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -249,11 +269,12 @@ public class MemberDAO extends BaseDAO{
 			connection = super.dataSource.getConnection();
 
 			//preparedStatement
-			String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content) values (chw_mlog_seq.nextval, ?, sysdate, ?)";
+			String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content, ip_address) values (chw_mlog_seq.nextval, ?, sysdate, ?, ?)";
 			
 			preparedStatement = connection.prepareStatement(query2);
 			preparedStatement.setString(1, loglid);
 			preparedStatement.setString(2, "Logout");
+			preparedStatement.setString(3, getIpAddress());
 			
 			int rn = preparedStatement.executeUpdate();
 
@@ -279,7 +300,7 @@ public class MemberDAO extends BaseDAO{
 		
 		
 	}
-	public void update_log(String loglid){
+	public void update_log(String loglid, String log_content){
 		
 		if(loglid.equals(null)){
 			return;
@@ -290,11 +311,13 @@ public class MemberDAO extends BaseDAO{
 			connection = super.dataSource.getConnection();
 
 			//preparedStatement
-			String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content) values (chw_mlog_seq.nextval, ?, sysdate, ?)";
+			String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content, ip_address) values (chw_mlog_seq.nextval, ?, sysdate, ?, ?)";
+			
 			
 			preparedStatement = connection.prepareStatement(query2);
 			preparedStatement.setString(1, loglid);
-			preparedStatement.setString(2, "info_update");
+			preparedStatement.setString(2, log_content);
+			preparedStatement.setString(3, getIpAddress());
 			
 			int rn = preparedStatement.executeUpdate();
 

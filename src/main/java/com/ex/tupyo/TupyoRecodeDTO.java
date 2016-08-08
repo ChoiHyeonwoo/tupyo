@@ -1,11 +1,22 @@
 package com.ex.tupyo;
 
+import java.sql.Date;
+
 public class TupyoRecodeDTO {
 	
 	int pk_tid;
 	int t_id;
 	String t_member;
 	String t_content;
+	Date t_date;
+	
+	
+	public Date getT_date() {
+		return t_date;
+	}
+	public void setT_date(Date t_date) {
+		this.t_date = t_date;
+	}
 	public TupyoRecodeDTO() {
 		// TODO Auto-generated constructor stub
 	}
