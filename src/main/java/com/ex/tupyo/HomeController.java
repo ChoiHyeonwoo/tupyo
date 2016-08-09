@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Handles requests for the application home page.
@@ -76,8 +77,9 @@ public class HomeController {
 		model.addAttribute("request", request);
 		
 		String id = request.getParameter("id");
-		
 		model.addAttribute("id", id);
+		
+		
 		
 		return "execute";
 	}
@@ -89,17 +91,20 @@ public class HomeController {
 		
 		return "register";
 	}
-	@RequestMapping(value = "/register_confirm")
-	public String register_confirm(HttpServletRequest request, Model model){
+	@RequestMapping(value = "/register_confirm", method=RequestMethod.POST)
+	public String register_confirm(@RequestParam(value = "item_arr[]", required = true) String[] t_item_content,HttpServletRequest request, Model model){
 		
 		model.addAttribute("request", request);
 		
 		String poll_title = request.getParameter("title");
 		String writer = request.getParameter("writer");
 		String is_duplicated = request.getParameter("duplicated");
+		String is_multi_check = request.getParameter("multi");
+		String item_number = request.getParameter("item_number");
 		
 		BaseDAO dao = new BaseDAO();
-		dao.reg_poll(poll_title, writer, is_duplicated);
+		dao.reg_poll(poll_title, writer, is_duplicated, item_number,is_multi_check, t_item_content);
+			
 		
 		return "register";
 	}

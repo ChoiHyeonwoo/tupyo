@@ -158,7 +158,31 @@ public class MemberController {
 		
 		
 	}
+	@RequestMapping("/m_check_log")
+	public String check_log(HttpServletRequest request, HttpServletResponse response, Model model){
+		
+		model.addAttribute("request", request);
+		
+		
+		return "/m_check_log";
+		
+	}
+	@RequestMapping("/m_log")
+	public String log_view(HttpServletRequest request, HttpServletResponse response, Model model){
+		
+		model.addAttribute("request", request);
+		HttpSession session = request.getSession();
+		
+		String _mlogid = (String)session.getAttribute("id");
+			
+		MemberDAO mdao = new MemberDAO();
+		ArrayList<MemberLogDTO> mldtos = mdao.member_log(_mlogid);
 
+		model.addAttribute("mldtos", mldtos);
+		
+		return "/m_log";
+		
+	}
 	
 	@RequestMapping("/m_check_destroy")
 	public String check_destroy(HttpServletRequest request, HttpServletResponse response, Model model){

@@ -1,11 +1,11 @@
 package com.ex.tupyo;
 
 import java.sql.Connection;
-import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -46,14 +46,12 @@ public class BaseDAO {
 			
 				int id = resultSet.getInt("id");
 				String title = resultSet.getString("title");
-				int agree = resultSet.getInt("agree");
-				int disagree = resultSet.getInt("disagree");
 				String writer = resultSet.getString("writer");
 				String is_duplicated = resultSet.getString("is_duplicated");
 				Date reg_date = resultSet.getDate("reg_date");
 				
 				
-				TupyoDTO dto = new TupyoDTO(id,title, agree, disagree, writer, is_duplicated, reg_date);
+				TupyoDTO dto = new TupyoDTO(id,title, writer, is_duplicated, reg_date);
 				
 				dtos.add(dto);
 			}
@@ -89,13 +87,11 @@ public class BaseDAO {
 		while(resultSet.next()){
 			int id = resultSet.getInt("id");
 			String title = resultSet.getString("title");
-			int agree = resultSet.getInt("agree");
-			int disagree = resultSet.getInt("disagree");
 			String writer = resultSet.getString("writer");
 			String is_duplicated = resultSet.getString("is_duplicated");
 			Date reg_date = resultSet.getDate("reg_date");
 			
-			TupyoDTO dto = new TupyoDTO(id, title, agree, disagree, writer, is_duplicated, reg_date);
+			TupyoDTO dto = new TupyoDTO(id, title,  writer, is_duplicated, reg_date);
 			dtos.add(dto);
 			
 		}
@@ -306,40 +302,76 @@ public class BaseDAO {
 		}
 		return result;
 	}
-			
-	public void reg_poll(String title, String writer, String is_duplicated){
+
+	public void reg_poll(String title, String writer, String is_duplicated, String item_number, String is_multi_check, String[] t_item_content){
 			
 			String query ="";
+			int t_id = 0;
 			try{
 				connection = dataSource.getConnection();
-				query = "insert into chw_tupyo (id, title, agree, disagree, writer, is_duplicated, reg_date) values (chw_tupyo_seq.nextval, ?, ?, ?, ?, ?, sysdate)";
+				connection.setAutoCommit(false); // 트랜잭션을 사용하기 위해서 AutoCommit을 정지한다 
+								
+				query = "insert into chw_tupyo (id, title, writer, is_duplicated, reg_date, item_number, is_multi_check) values (chw_tupyo_seq.nextval, ?, ?, ?, sysdate, ?, ?)";
 				
 				preparedStatement = connection.prepareStatement(query);
 				preparedStatement.setString(1, title);
-				preparedStatement.setInt(2, 0);
-				preparedStatement.setInt(3, 0);
-				preparedStatement.setString(4, writer);
-				preparedStatement.setString(5, is_duplicated);
-				
+				preparedStatement.setString(2, writer);
+				preparedStatement.setString(3, is_duplicated);
+				preparedStatement.setInt(4, Integer.parseInt(item_number));
+				preparedStatement.setString(5, is_multi_check);
+											
 				int rn = preparedStatement.executeUpdate();	
+				if(rn < 1){
+					connection.rollback(); //에러발생시 rollback 처리
+				}
 				
-			}catch(Exception e){
+				query = "select * from chw_tupyo where title=? and writer=?";
+				preparedStatement = connection.prepareStatement(query);				
+				preparedStatement.setString(1, title);
+				preparedStatement.setString(2, writer);
+				resultSet = preparedStatement.executeQuery();
 				
+				
+				
+				if(resultSet.next()){
+					t_id = resultSet.getInt("id");
+				}else{
+					connection.rollback(); //에러발생시 rollback 처리
+				}
+				
+				for(int i = 0; i < t_item_content.length; i++){
+					query = "insert into chw_tupyo_items(pk_id, t_id, t_item_content, t_item_selected) values (chw_tupyo_items_seq.nextval, ?, ?, ?)";
+					preparedStatement = connection.prepareStatement(query);
+					preparedStatement.setInt(1, t_id);
+					preparedStatement.setString(2, t_item_content[i]);
+					preparedStatement.setInt(3, 0);
+					
+					 rn = preparedStatement.executeUpdate();	
+					if(rn < 1){
+						connection.rollback(); //에러발생시 rollback 처리
+					}
+					
+				}			
+								
+				connection.commit(); //데이타 처리시 에러가 없다면 commit 수행 
+			}catch(SQLException e){
 				e.printStackTrace();
-				
 			}finally{
 				try{
 					if(preparedStatement !=null){
 						preparedStatement.close();
+						
 					}
 					if(connection !=null){
+						connection.setAutoCommit(true); //트랜잭션 처리를 기본상태로 되돌린다. 
 						connection.close();
+						
 					}	
-				}catch(Exception e){
+				}catch(SQLException e){
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
-		
+
 	}

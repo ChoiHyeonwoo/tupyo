@@ -3,8 +3,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 	<% 
 		HttpSession session = request.getSession();
@@ -32,9 +32,8 @@
 	</script>
 </head>
 <body>
-	M_CHECK_UPDATE.JSP
-	
-	<h1>비밀번호를 입력해 주시기 바랍니다.</h1><br />
+
+<h1>비밀번호를 입력해 주시기 바랍니다.</h1><br />
 
 		비밀번호 입력 : <input type="password" id="curr_password" /> <br />
 		<input type="button" onclick="pwd_check()" value="확인"/>
@@ -57,7 +56,7 @@
 					alert("비밀번호를 다시 입력해주세요");
 				}
 				else{
-					location.href="/tupyo/m_update";
+					location.href="/tupyo/m_log";
 				}
 			},
 		});

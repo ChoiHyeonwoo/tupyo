@@ -418,4 +418,60 @@ public class MemberDAO extends BaseDAO{
 		
 	}
 	
+	public ArrayList<MemberLogDTO> member_log(String _mlogid){
+		ArrayList<MemberLogDTO> mldtos = new ArrayList<MemberLogDTO>();
+		
+		try{
+			connection = super.dataSource.getConnection();
+			String query = "select * from chw_mlog where mlogid= ? order by log_date desc";
+			System.out.println(_mlogid);
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, _mlogid);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()){
+				int pk_lid = resultSet.getInt("pk_lid");
+				String mlogid = resultSet.getString("mlogid");	
+				Date log_date = resultSet.getDate("log_date");
+				String log_content = "";
+				if((resultSet.getString("log_content")).equals("Login")){
+					log_content = "로그인";
+				}else if((resultSet.getString("log_content")).equals("Logout")){
+					log_content = "로그아웃";
+				}else if((resultSet.getString("log_content")).equals("info_update")){
+					log_content = "정보수정";
+				}else if((resultSet.getString("log_content")).equals("login_fail")){
+					log_content = "로그인 실패";
+				}else {
+					log_content = "탈퇴 계정";
+				}
+				
+				String ip_address = resultSet.getString("ip_address");
+				
+				MemberLogDTO mldto = new MemberLogDTO(pk_lid, mlogid, log_date, log_content, ip_address);
+			
+				mldtos.add(mldto);
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			
+		}finally{
+			try{
+				// connection dispose
+				if(connection!=null)
+					connection.close();
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		return mldtos;
+	}
+	
 }
