@@ -29,6 +29,52 @@ public class BaseDAO {
 			e.printStackTrace();
 		}
 	}
+	public ArrayList<TupyoItemDTO> tupyo_detail_view(String tupyo_id){
+		ArrayList<TupyoItemDTO> tidtos = new ArrayList<TupyoItemDTO>();
+
+		try{
+			connection = dataSource.getConnection();
+			
+			String query = "select * from chw_tupyo_items where t_id = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, Integer.parseInt(tupyo_id));
+			
+			resultSet = preparedStatement.executeQuery();	
+			
+			while(resultSet.next()){
+				int pk_id = resultSet.getInt("pk_id");
+				int t_id = resultSet.getInt("t_id");
+				String t_item_content = resultSet.getString("t_item_content");
+				int t_item_selected = resultSet.getInt("t_item_selected");
+				String t_title = resultSet.getString("t_title");
+				
+				TupyoItemDTO tidto = new TupyoItemDTO(pk_id, t_id, t_item_content, t_item_selected, t_title);
+				
+				tidtos.add(tidto);
+			}
+							
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			try{
+				if(preparedStatement !=null){
+					preparedStatement.close();
+					
+				}
+				if(connection !=null){
+					
+					connection.close();
+					
+				}	
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return tidtos;
+	}
 	
 	
 	public ArrayList<TupyoDTO> titleView(){
@@ -49,10 +95,10 @@ public class BaseDAO {
 				String writer = resultSet.getString("writer");
 				String is_duplicated = resultSet.getString("is_duplicated");
 				Date reg_date = resultSet.getDate("reg_date");
+				int item_number = resultSet.getInt("item_number");
+				String is_multi_check = resultSet.getString("is_multi_check");
 				
-				
-				TupyoDTO dto = new TupyoDTO(id,title, writer, is_duplicated, reg_date);
-				
+				TupyoDTO dto = new TupyoDTO(id, title,  writer, is_duplicated, reg_date, item_number, is_multi_check);
 				dtos.add(dto);
 			}
 			
@@ -75,24 +121,26 @@ public class BaseDAO {
 		return dtos;
 		
 	}
-	public ArrayList<TupyoDTO> result(){
+	public TupyoDTO result(String t_id){
 		// result.jsp에서 결과 보여주기
-		ArrayList<TupyoDTO> dtos = new ArrayList<TupyoDTO>();
+		TupyoDTO dto = null;
 		try{
 			connection = dataSource.getConnection();
-			String query = "select * from chw_tupyo";
+			String query = "select * from chw_tupyo where id = ?";
 			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, Integer.parseInt(t_id));
 			resultSet = preparedStatement.executeQuery();
 				
-		while(resultSet.next()){
+		if (resultSet.next()){
 			int id = resultSet.getInt("id");
 			String title = resultSet.getString("title");
 			String writer = resultSet.getString("writer");
 			String is_duplicated = resultSet.getString("is_duplicated");
 			Date reg_date = resultSet.getDate("reg_date");
+			int item_number = resultSet.getInt("item_number");
+			String is_multi_check = resultSet.getString("is_multi_check");
 			
-			TupyoDTO dto = new TupyoDTO(id, title,  writer, is_duplicated, reg_date);
-			dtos.add(dto);
+			dto = new TupyoDTO(id, title,  writer, is_duplicated, reg_date, item_number, is_multi_check);
 			
 		}
 
@@ -115,7 +163,7 @@ public class BaseDAO {
 			
 			
 		}
-		return dtos;
+		return dto;
 	}
 	public String had_tupyo(String t_id, String t_member){
 		String result = "";
@@ -159,7 +207,9 @@ public class BaseDAO {
 	}
 	public void tupyo_log(String t_id, String t_member, String t_content){
 		try{
+			
 			connection = dataSource.getConnection();
+			connection.setAutoCommit(false); // 트랜잭션을 사용하기 위해서 AutoCommit을 정지한다 
 			String query = "insert into chw_tupyo_recode (pk_tid, t_id, t_member, t_content, t_date) values "
 					+ "(chw_tupyo_recode_seq.nextval, ?,?,?, sysdate)";
 			preparedStatement = connection.prepareStatement(query);
@@ -168,36 +218,139 @@ public class BaseDAO {
 			preparedStatement.setString(3, t_content);
 			
 			int rn =  preparedStatement.executeUpdate();
-
+			if(rn < 1 ){
+				connection.rollback();
+			}
+			connection.commit(); 
 		}catch(SQLException e){
 			e.printStackTrace();
+			
 		}finally{
 			
 			try{
 				
-				if(connection!=null)
+				if(connection!=null){
+					connection.setAutoCommit(true); //트랜잭션 처리를 기본상태로 되돌린다.
 					connection.close();
+				}
+				
 				if(preparedStatement!=null)
 					preparedStatement.close();
 				if(resultSet!=null)
 					resultSet.close();
-				
+				 
 			}catch(Exception e){
 				e.printStackTrace();
+				
 			}
 			
 			
 		}
 	}
-	public int[] getTupyoResult(String t_id){
+	
+	public void tupyo_log_multi(String t_id, String t_member, String[] t_content){
+		try{
+			
+			connection = dataSource.getConnection();
+			connection.setAutoCommit(false); // 트랜잭션을 사용하기 위해서 AutoCommit을 정지한다 
+			
+			for(int i = 0; i < t_content.length; i++){
+				String query = "insert into chw_tupyo_recode (pk_tid, t_id, t_member, t_content, t_date) values "
+						+ "(chw_tupyo_recode_seq.nextval, ?,?,?, sysdate)";
+				preparedStatement = connection.prepareStatement(query);
+				preparedStatement.setInt(1, Integer.parseInt(t_id));
+				preparedStatement.setString(2, t_member);
+				preparedStatement.setString(3, t_content[i]);
+				
+				int rn =  preparedStatement.executeUpdate();
+				
+				if(rn < 1 ){
+					connection.rollback();
+					return;
+				}
+			}
+			
+			connection.commit(); 
+		}catch(SQLException e){
+			e.printStackTrace();
+			
+		}finally{
+			
+			try{
+				
+				if(connection!=null){
+					connection.setAutoCommit(true); //트랜잭션 처리를 기본상태로 되돌린다.
+					connection.close();
+				}
+				
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+				 
+			}catch(Exception e){
+				e.printStackTrace();
+				
+			}
+			
+			
+		}
+	}
+	public ArrayList<TupyoMultiChecked> getTupyoResult_multi(String t_id, String t_result[]){
 		String query = "";
-		int result_arr[] = new int[2];
-		int agree = 0;
-		int disagree = 0;
+		ArrayList<TupyoMultiChecked> result_list = new ArrayList<TupyoMultiChecked>(); 
+		
+
 		try{
 			connection = dataSource.getConnection();
 
-			System.out.println("agree");
+			for(int i = 0; i < t_result.length; i++){
+				query = "select * from chw_tupyo_recode where t_id = ?";
+				int number = 0;
+				preparedStatement = connection.prepareStatement(query);
+				preparedStatement.setInt(1, Integer.parseInt(t_id));
+				ResultSet resultSet = preparedStatement.executeQuery();	
+				
+				while(resultSet.next()){
+					if(resultSet.getString("t_content").equals(t_result[i])){
+						number++;
+					}
+					
+					
+				}
+				String temp_number = ""+number;
+				TupyoMultiChecked tmc = new TupyoMultiChecked(temp_number, t_result[i]);
+				result_list.add(tmc);
+			}
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			
+		}finally{
+			try{
+				if(preparedStatement !=null){
+					preparedStatement.close();
+				}
+				if(connection !=null){
+					connection.close();
+				}	
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return result_list;
+		
+	}
+	
+	public String[] getTupyoResult(String t_id, String t_result){
+		String query = "";
+		String result_arr[] = new String[2];
+		int number = 0;
+
+		try{
+			connection = dataSource.getConnection();
+
 			query = "select * from chw_tupyo_recode where t_id = ?";
 
 			preparedStatement = connection.prepareStatement(query);
@@ -205,16 +358,14 @@ public class BaseDAO {
 			ResultSet resultSet = preparedStatement.executeQuery();	
 			
 			while(resultSet.next()){
-				if(resultSet.getString("t_content").equals("agree")){
-					agree++;
+				if(resultSet.getString("t_content").equals(t_result)){
+					number++;
 				}
-				else{
-					disagree++;
-				}
+
 				
 			}
-			result_arr[0] = agree;
-			result_arr[1] = disagree;
+			result_arr[0] = ""+number;
+			result_arr[1] = t_result;
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -234,21 +385,27 @@ public class BaseDAO {
 		return result_arr;
 		
 	}
-	
-	public void upHit(String result, String t_id, int agree, int disagree){
+	public void upHit_multi(String t_id, ArrayList<TupyoMultiChecked> result_list){
 		
 		String query ="";
 		try{
 			connection = dataSource.getConnection();
-			query = "update chw_tupyo set agree = ?, disagree = ? where id = ?";
-					 
-			preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setInt(1, agree);
-			preparedStatement.setInt(2, disagree);
-			preparedStatement.setInt(3, Integer.parseInt(t_id));
-			
-			int rn = preparedStatement.executeUpdate();	
-			
+			connection.setAutoCommit(false); // 트랜잭션을 사용하기 위해서 AutoCommit을 정지한다 
+			for (int i=0; i<result_list.size(); i++){
+				query = "update chw_tupyo_items set t_item_selected = ? where t_id = ? and t_item_content=?";
+				 
+				preparedStatement = connection.prepareStatement(query);
+				preparedStatement.setInt(1, Integer.parseInt(result_list.get(i).getT_item_selected()));
+				preparedStatement.setInt(2, Integer.parseInt(t_id));
+				preparedStatement.setString(3, result_list.get(i).getT_content());
+				
+				int rn = preparedStatement.executeUpdate();	
+				if(rn < 1){
+					connection.rollback();				
+				}			
+			}
+								
+			connection.commit();		
 		}catch(Exception e){
 			
 			e.printStackTrace();
@@ -259,6 +416,7 @@ public class BaseDAO {
 					preparedStatement.close();
 				}
 				if(connection !=null){
+					connection.setAutoCommit(true); //트랜잭션 처리를 기본상태로 되돌린다. 
 					connection.close();
 				}	
 			}catch(Exception e){
@@ -267,6 +425,47 @@ public class BaseDAO {
 		}
 		
 	}
+	
+	
+	public void upHit(String result, String t_id, String number, String t_content){
+		
+		String query ="";
+		try{
+			connection = dataSource.getConnection();
+			connection.setAutoCommit(false); // 트랜잭션을 사용하기 위해서 AutoCommit을 정지한다 
+			query = "update chw_tupyo_items set t_item_selected = ? where t_id = ? and t_item_content=?";
+					 
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, Integer.parseInt(number));
+			preparedStatement.setInt(2, Integer.parseInt(t_id));
+			preparedStatement.setString(3, t_content);
+			
+			int rn = preparedStatement.executeUpdate();	
+			if(rn < 1){
+				connection.rollback();				
+			}			
+			connection.commit();		
+		}catch(Exception e){
+			
+			e.printStackTrace();
+			
+		}finally{
+			try{
+				if(preparedStatement !=null){
+					preparedStatement.close();
+				}
+				if(connection !=null){
+					connection.setAutoCommit(true); //트랜잭션 처리를 기본상태로 되돌린다. 
+					connection.close();
+					
+				}	
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 	public String is_duplicated(String t_id){
 		String result = "";
 		
@@ -302,6 +501,8 @@ public class BaseDAO {
 		}
 		return result;
 	}
+	
+	
 
 	public void reg_poll(String title, String writer, String is_duplicated, String item_number, String is_multi_check, String[] t_item_content){
 			
@@ -340,11 +541,12 @@ public class BaseDAO {
 				}
 				
 				for(int i = 0; i < t_item_content.length; i++){
-					query = "insert into chw_tupyo_items(pk_id, t_id, t_item_content, t_item_selected) values (chw_tupyo_items_seq.nextval, ?, ?, ?)";
+					query = "insert into chw_tupyo_items(pk_id, t_id, t_item_content, t_item_selected, t_title) values (chw_tupyo_items_seq.nextval, ?, ?, ?, ?)";
 					preparedStatement = connection.prepareStatement(query);
 					preparedStatement.setInt(1, t_id);
 					preparedStatement.setString(2, t_item_content[i]);
 					preparedStatement.setInt(3, 0);
+					preparedStatement.setString(4, title);
 					
 					 rn = preparedStatement.executeUpdate();	
 					if(rn < 1){

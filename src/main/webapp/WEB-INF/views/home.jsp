@@ -7,6 +7,16 @@
 <html>
 <head>
 	<title>Home</title>
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    border: 1px solid #bcbcbc;
+    padding: 5px 10px;
+  }
+</style>
 </head>
 
 <body>		
@@ -15,10 +25,7 @@
 		String id = (String)session.getAttribute("id");
 		String pk_id = (String)session.getAttribute("pk_id");
 		String name= (String)session.getAttribute("name");
-		
-		out.println(id);
-		out.println(name);
-		out.println(pk_id);
+
 	%>
 	
 		<script>
@@ -40,23 +47,35 @@
 <h1>
 	투표목록입니다.
 </h1>
+	<table>
+	<tr>
+	<td>투표 제목</td>
+	<td>투표 작성자</td>
+	<td>투표 중복허용 여부</td>
+	<td>투표 다중선택 허용 여부</td>
+	<td>투표 등록 날짜</td>
+	<td>링크</td>
+	</tr>
+	
+	<c:forEach items="${title}" var="dto">
+	<tr>
+		<td>${dto.title}</td>
+		<td>${dto.writer}</td>
+		<td>${dto.is_duplicated}</td>
+		<td>${dto.is_multi_check}</td>
+		<td>${dto.reg_date}</td>
 
-		<c:forEach items="${title}" var="dto">
-		
-			투표 제목 : ${dto.title}<br />
-			투표 작성자 : ${dto.writer}<br />
-			투표 중복허용 여부 : ${dto.is_duplicated}<br />
-			투표 등록 날짜 : ${dto.reg_date}<br />
+	<td><a href="/tupyo/execute?id=${dto.id}"> 투표하러가기 </a></td>
+	</tr>
 
-		<a href="/tupyo/execute?id=${dto.id}"> 투표하러가기 </a>
-		<br/>
 	</c:forEach>
+	</table>
 	<br />
 	
-	<a href = "/tupyo/register">투표 등록하기</a><br />
+	<a href = "/tupyo/register">투표 등록하기</a>
 	<!-- <a href = "/tupyo/m_login">로그인</a> -->
 	&nbsp;&nbsp;<a id="log_check" href = "/tupyo/m_logout">로그아웃</a>&nbsp;&nbsp;
-	<!--  <a href = "/tupyo/m_register">회원가입 하기</a> --><br/>
+	<!--  <a href = "/tupyo/m_register">회원가입 하기</a> -->
 	<a id="member_check" href= "/tupyo/m_check_update">회원정보수정</a>&nbsp;&nbsp;<a id="member_drop" href = "/tupyo/m_check_destroy">회원탈퇴</a>
 	<a id="log_view" href="/tupyo/m_check_log">내 로그이력 보기</a>
 	

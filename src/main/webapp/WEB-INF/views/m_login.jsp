@@ -5,11 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title>Insert title here</title>
-<script>
-	var msg = "${error}";
-	if(msg!=null)
-		alert(msg);
-</script>
+
 </head>
 <body>
 	m_login.jsp 페이지

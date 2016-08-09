@@ -86,7 +86,7 @@ public class MemberDAO extends BaseDAO{
 		try{			
 			//connection
 			connection = super.dataSource.getConnection();
-			
+			connection.setAutoCommit(false);
 			String query = "insert into chw_member (id, password, name, curr_user, reg_date, drop_date, pk_mid ) values (?, ?, ?, 'y', sysdate, ?, chw_member_seq.nextval)";
 			//preparedStatement
 			preparedStatement = connection.prepareStatement(query);
@@ -95,7 +95,10 @@ public class MemberDAO extends BaseDAO{
 			preparedStatement.setString(3, name);
 			preparedStatement.setString(4, null);
 			int rn = preparedStatement.executeUpdate();
-			
+			if(rn <1){
+				connection.rollback();
+			}
+			connection.commit();		
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -103,8 +106,10 @@ public class MemberDAO extends BaseDAO{
 		finally{
 			try{
 				// connection dispose
-				if(connection!=null)
+				if(connection!=null){
+					connection.setAutoCommit(true);
 					connection.close();
+				}
 				if(preparedStatement!=null)
 					preparedStatement.close();
 				if(resultSet!=null)
@@ -225,6 +230,7 @@ public class MemberDAO extends BaseDAO{
 			try{
 				//connection
 				connection = super.dataSource.getConnection();
+				connection.setAutoCommit(false);
 	
 				//preparedStatement
 				String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content, ip_address) values (chw_mlog_seq.nextval, ?, sysdate, ?, ?)";
@@ -233,9 +239,13 @@ public class MemberDAO extends BaseDAO{
 				preparedStatement.setString(1, loglid);
 				preparedStatement.setString(2, "Login");
 				preparedStatement.setString(3, getIpAddress());
-				
+
 				int rn = preparedStatement.executeUpdate();
-	
+				
+				if(rn < 1){
+					connection.rollback();
+				}
+				connection.commit();
 				System.out.println(getIpAddress());
 			}catch(Exception e){
 				e.printStackTrace();
@@ -243,8 +253,10 @@ public class MemberDAO extends BaseDAO{
 			finally{
 				try{
 					// connection dispose
-					if(connection!=null)
+					if(connection!=null){
+						connection.setAutoCommit(true);
 						connection.close();
+					}
 					if(preparedStatement!=null)
 						preparedStatement.close();
 					if(resultSet!=null)
@@ -267,7 +279,7 @@ public class MemberDAO extends BaseDAO{
 		try{
 			//connection
 			connection = super.dataSource.getConnection();
-
+			connection.setAutoCommit(false);
 			//preparedStatement
 			String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content, ip_address) values (chw_mlog_seq.nextval, ?, sysdate, ?, ?)";
 			
@@ -277,7 +289,11 @@ public class MemberDAO extends BaseDAO{
 			preparedStatement.setString(3, getIpAddress());
 			
 			int rn = preparedStatement.executeUpdate();
-
+			
+			if(rn < 1){
+				connection.rollback();
+			}
+			connection.commit();
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -285,8 +301,10 @@ public class MemberDAO extends BaseDAO{
 		finally{
 			try{
 				// connection dispose
-				if(connection!=null)
+				if(connection!=null){
+					connection.setAutoCommit(true);
 					connection.close();
+				}					
 				if(preparedStatement!=null)
 					preparedStatement.close();
 				if(resultSet!=null)
@@ -309,7 +327,7 @@ public class MemberDAO extends BaseDAO{
 		try{
 			//connection
 			connection = super.dataSource.getConnection();
-
+			connection.setAutoCommit(false);
 			//preparedStatement
 			String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content, ip_address) values (chw_mlog_seq.nextval, ?, sysdate, ?, ?)";
 			
@@ -320,7 +338,10 @@ public class MemberDAO extends BaseDAO{
 			preparedStatement.setString(3, getIpAddress());
 			
 			int rn = preparedStatement.executeUpdate();
-
+			if(rn < 1){
+				connection.rollback();
+			}
+			connection.commit();
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -328,8 +349,10 @@ public class MemberDAO extends BaseDAO{
 		finally{
 			try{
 				// connection dispose
-				if(connection!=null)
+				if(connection!=null){
+					connection.setAutoCommit(true);
 					connection.close();
+				}				
 				if(preparedStatement!=null)
 					preparedStatement.close();
 				if(resultSet!=null)
@@ -347,7 +370,7 @@ public class MemberDAO extends BaseDAO{
 		try{
 			//connection
 			connection = super.dataSource.getConnection();
-
+			connection.setAutoCommit(false);
 			//preparedStatement
 			String query2 = "update chw_member set id=?, password=?, name=? where pk_mid=?";
 			
@@ -358,7 +381,10 @@ public class MemberDAO extends BaseDAO{
 			preparedStatement.setInt(4, Integer.parseInt(pk_lid));
 			
 			int rn = preparedStatement.executeUpdate();
-
+			if(rn< 1){
+				connection.rollback();
+			}
+			connection.commit();
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -366,8 +392,11 @@ public class MemberDAO extends BaseDAO{
 		finally{
 			try{
 				// connection dispose
-				if(connection!=null)
+				if(connection!=null){
+					connection.setAutoCommit(true);
 					connection.close();
+				}
+					
 				if(preparedStatement!=null)
 					preparedStatement.close();
 				if(resultSet!=null)
@@ -384,7 +413,7 @@ public class MemberDAO extends BaseDAO{
 		try{
 			//connection
 			connection = super.dataSource.getConnection();
-
+			connection.setAutoCommit(false);
 			//preparedStatement
 			String query2 = "update chw_member set password=?, name=?, curr_user=?, drop_date=sysdate where pk_mid=?";
 			
@@ -395,7 +424,10 @@ public class MemberDAO extends BaseDAO{
 			preparedStatement.setInt(4, Integer.parseInt(pk_lid));
 			
 			int rn = preparedStatement.executeUpdate();
-
+			if(rn < 1){
+				connection.rollback();
+			}
+			connection.commit();
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -403,8 +435,10 @@ public class MemberDAO extends BaseDAO{
 		finally{
 			try{
 				// connection dispose
-				if(connection!=null)
+				if(connection!=null){
+					connection.setAutoCommit(true);
 					connection.close();
+				}
 				if(preparedStatement!=null)
 					preparedStatement.close();
 				if(resultSet!=null)
@@ -424,7 +458,7 @@ public class MemberDAO extends BaseDAO{
 		try{
 			connection = super.dataSource.getConnection();
 			String query = "select * from chw_mlog where mlogid= ? order by log_date desc";
-			System.out.println(_mlogid);
+
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, _mlogid);
 			

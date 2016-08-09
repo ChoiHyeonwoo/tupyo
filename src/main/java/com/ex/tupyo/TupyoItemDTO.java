@@ -6,8 +6,18 @@ public class TupyoItemDTO {
 	int t_id;
 	String t_item_content;
 	int t_item_selected;
+	String t_title;
 	
-	
+	public String getT_title() {
+		return t_title;
+	}
+
+
+	public void setT_title(String t_title) {
+		this.t_title = t_title;
+	}
+
+
 	public int getPk_id() {
 		return pk_id;
 	}
@@ -48,13 +58,13 @@ public class TupyoItemDTO {
 	}
 
 
-	public TupyoItemDTO(int _pk_id, int _t_id, String _t_item_content, int _t_item_selected) {
+	public TupyoItemDTO(int _pk_id, int _t_id, String _t_item_content, int _t_item_selected, String _t_title) {
 		// TODO Auto-generated constructor stub
 		this.pk_id = _pk_id;
 		this.t_id = _t_id;
 		this.t_item_content = _t_item_content;
 		this.t_item_selected = _t_item_selected;
-		
+		this.t_title = _t_title;	
 	}
 
 }

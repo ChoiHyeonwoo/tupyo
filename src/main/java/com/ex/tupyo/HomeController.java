@@ -55,12 +55,46 @@ public class HomeController {
 		if(is_tupyo.equals("available") || is_duplicated.equals("yes")){
 					
 			dao.tupyo_log(t_id, member_id, result);
-			int result_arr[] = dao.getTupyoResult(t_id); 
+			String result_arr[] = dao.getTupyoResult(t_id, result); 
 			dao.upHit(result, t_id, result_arr[0], result_arr[1]);
 			
 			model.addAttribute("result", result);
 			System.out.println("result : " + result);
 			System.out.println("id : " + result);	
+		}
+		try {
+			response.getWriter().print(is_tupyo+",");
+			response.getWriter().print(is_duplicated);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+		
+	}
+	
+	@RequestMapping(value = "/result_multi", method=RequestMethod.POST)
+	public void result_multi(@RequestParam(value = "item_arr[]", required = true) String[] t_item_content, HttpServletResponse response,Model model, HttpServletRequest request){
+		
+		HttpSession session = request.getSession();
+		String member_id = (String)session.getAttribute("id");
+		
+		model.addAttribute("request", request);
+
+		String t_id = request.getParameter("id");
+		
+		BaseDAO dao = new BaseDAO();
+		String is_tupyo=dao.had_tupyo(t_id, member_id);
+		String is_duplicated = dao.is_duplicated(t_id);
+		
+		if(is_tupyo.equals("available") || is_duplicated.equals("yes")){
+					
+			dao.tupyo_log_multi(t_id, member_id, t_item_content);
+			
+			ArrayList<TupyoMultiChecked> result_list = dao.getTupyoResult_multi(t_id, t_item_content); 
+			dao.upHit_multi(t_id, result_list);
+			
+			model.addAttribute("result_list", result_list);
+
 		}
 		try {
 			response.getWriter().print(is_tupyo+",");
@@ -78,9 +112,14 @@ public class HomeController {
 		
 		String id = request.getParameter("id");
 		model.addAttribute("id", id);
+		BaseDAO dao = new BaseDAO();
 		
-		
-		
+		ArrayList<TupyoItemDTO> tidtos =  dao.tupyo_detail_view(id);
+		TupyoDTO tdto =  dao.result(id);
+
+		model.addAttribute("tidtos", tidtos);
+
+		model.addAttribute("tdto", tdto);	
 		return "execute";
 	}
 	

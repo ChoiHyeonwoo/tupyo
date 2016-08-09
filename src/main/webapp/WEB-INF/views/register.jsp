@@ -38,7 +38,7 @@
 	<div class="items">
 		<input type="text" id="items0"/><input type="text" id="items1"/>
 	</div>
-	<input type="button" value="항목확인" onclick="check_item()" />
+
 	<input type="button" value="투표등록" onclick="reg_poll()" />
 	<script>
 		var item_number = 2;

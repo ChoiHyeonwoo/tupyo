@@ -22,7 +22,7 @@
 	M_UPDATE.JSP PAGE
 
 
-		아이디 : <input type = "text" id="logid" value="<%=id %>"/> <br /> 
+		아이디 : <input type = "text" id="logid" value="<%=id %>" readonly/> <br /> 
 		비밀번호 : <input type = "password" id="password"/><br /> 
 		비밀번호 확인 : <input type = "password" id="password_confirm"/><br />
 		이름: <input type = "text" id="name" value="<%=name %>"/> <br />

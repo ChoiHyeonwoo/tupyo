@@ -17,7 +17,7 @@
 	// 다시 수정 
 		function id_check(){
 		var logid = $("#logid").val();
-		alert(logid);
+		
 			$.ajax({
 				method: "POST",
 				url: "/tupyo/m_check_id",
@@ -39,14 +39,34 @@
 		}
 		
 		function member_reg(){
-
+			var blank_pattern = /^\s+|\s+$/g;
 			var id = $("#logid").val();
+			$.ajax({
+				method: "POST",
+				url: "/tupyo/m_check_id",
+				data: {
+					id: logid
+				},
+				success: function(result){
+
+					if(result=="fail"){
+						alert("아이디 중복체크를 확인해 주세요.");
+						return;
+					}
+				}
+			});
 			var password = $("#password").val();
 			var password_confirm = $("#password_confirm").val();
 			var name = $("#name").val();
 			
 			if(id == ""){
 				alert("아이디를 입력해 주세요");
+			}else if( id.replace( blank_pattern, '' ) == "" ){
+			    alert(' 공백만 입력되었습니다 ');
+			    return false;
+			}else if(id == "" || password_confirm == "")
+			{
+				alert("비밀번호를 입력해 주세요");
 			}else if(password == "" || password_confirm == "")
 			{
 				alert("비밀번호를 입력해 주세요");

@@ -11,14 +11,11 @@
 		String id = (String)session.getAttribute("id");
 		String pk_id = (String)session.getAttribute("pk_id");
 		String name= (String)session.getAttribute("name");
-		
-		out.println(id);
-		out.println(pk_id);
-		out.println(name);
+
 
 	%>
 	<script>
-		var id = "<%=id%>";
+		var id =<%=id%>;
 		if (id == null)
 			{
 				alert("로그인 후에 이용바랍니다.");
