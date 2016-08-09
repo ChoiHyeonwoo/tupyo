@@ -16,9 +16,6 @@
 		String pk_id = (String)session.getAttribute("pk_id");
 		String name= (String)session.getAttribute("name");
 
-		out.println(id);
-		out.println(name);
-		out.println(pk_id);
 	%>
 <script>
 var id =<%=id%>;
@@ -34,7 +31,7 @@ if(id==null){
 
 
 <body>
-	execute.jsp page
+
 	<br/>
 
 	<br/>

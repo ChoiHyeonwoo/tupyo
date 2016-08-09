@@ -8,7 +8,6 @@
 
 </head>
 <body>
-	m_login.jsp 페이지
 
 	<form action = "/tupyo/m_check" method="POST">
 		아이디 : <input type= "text" name="logid" /><br />

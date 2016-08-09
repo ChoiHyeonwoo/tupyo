@@ -14,10 +14,14 @@
 		이름: <input type = "text" id="name"/> <br />
 		<input type="button" onclick="member_reg()" value="회원가입" /> <input type="button" value="취소" />
 <script>
-	// 다시 수정 
+
 		function id_check(){
 		var logid = $("#logid").val();
-		
+		var blank_pattern = /^\s+|\s+$/g;
+		if( logid.replace( blank_pattern, '' ) == "" ){
+		    alert("아이디에 공백만 입력되었습니다");
+		    return;
+		}
 			$.ajax({
 				method: "POST",
 				url: "/tupyo/m_check_id",
@@ -33,7 +37,7 @@
 						$("#id_check_result").html("사용가능한 아이디 입니다.");
 					}
 				},
-				//beforeSend:showRequest,
+
 						
 			});
 		}
@@ -62,11 +66,9 @@
 			if(id == ""){
 				alert("아이디를 입력해 주세요");
 			}else if( id.replace( blank_pattern, '' ) == "" ){
-			    alert(' 공백만 입력되었습니다 ');
-			    return false;
-			}else if(id == "" || password_confirm == "")
-			{
-				alert("비밀번호를 입력해 주세요");
+			    alert("아이디에 공백만 입력되었습니다");
+			}else if( password.replace( blank_pattern, '' ) == "" || password_confirm.replace( blank_pattern, '' ) == ""){
+			    alert("패스워드에 공백만 입력되었습니다");
 			}else if(password == "" || password_confirm == "")
 			{
 				alert("비밀번호를 입력해 주세요");

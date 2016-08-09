@@ -12,15 +12,10 @@
 		String id = (String)session.getAttribute("id");
 		String pk_id = (String)session.getAttribute("pk_id");
 		String name= (String)session.getAttribute("name");
-		
-		out.println(id);
-		out.println(name);
-		out.println(pk_id);
+
 	%>
 </head>
 <body>
-	M_UPDATE.JSP PAGE
-
 
 		아이디 : <input type = "text" id="logid" value="<%=id %>" readonly/> <br /> 
 		비밀번호 : <input type = "password" id="password"/><br /> 
