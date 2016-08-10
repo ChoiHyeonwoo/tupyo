@@ -18,9 +18,9 @@
 
 	%>
 <script>
-var id =<%=id%>;
+var id ='<%=id%>';
 
-if(id==null){	
+if(id=='null'){	
 	alert("로그인 먼저 하세요");
 	location.href = "/tupyo";
 	}
@@ -44,7 +44,8 @@ if(id==null){
 	<div>
 	
 	</div>	
-	<input type="button" id="result" value ="결과 확인" onclick="result_get()" />
+	<input type="button" id="result" value ="투표하기" onclick="result_get()" />
+	<a href = "/tupyo" >취소</a>
 	<br/>
 
 
@@ -54,7 +55,7 @@ if(id==null){
 			<c:when test="${is_multi_check == 'yes'}">
 			<c:forEach items="${tidtos}" var="info">
 				
-				$("div").append('<input type="checkbox" name="survay" value="${info.t_item_content}" />${info.t_item_content} 현재 득표 : ${info.t_item_selected} 표');
+				$("div").append('<input type="checkbox" name="survay" value="${info.t_item_content}" />${info.t_item_content} ');
 				$("#result").attr('onclick', "result_set()");
 			</c:forEach>
 
@@ -63,21 +64,23 @@ if(id==null){
 			<c:otherwise>
 				<c:forEach items="${tidtos}" var="info">
 				
-					$("div").append('<input type="radio" name="survay" value="${info.t_item_content}" />${info.t_item_content} 현재 득표 : ${info.t_item_selected} 표');
+					$("div").append('<input type="radio" name="survay" value="${info.t_item_content}" />${info.t_item_content}' );
 			
 				</c:forEach>
 
 			</c:otherwise>
 			</c:choose>
 			function result_set(){
-
-			
 				 var chked_val = new Array();
+	
 				  $(":checkbox[name='survay']:checked").each(function(pi,po){
 				    chked_val.push(po.value);
 				  });
-				  
-				  
+				
+				  if(chked_val==false){
+						alert("투표 진행 바랍니다.");
+						return;
+					}
 				$.ajaxSettings.traditional = true;
 				$.ajax({
 					method: "POST",
@@ -103,6 +106,11 @@ if(id==null){
 			function result_get(){
 
 				var survay = $(':radio[name="survay"]:checked').val();
+				if(survay ==null){
+					alert("투표 진행 바랍니다.");
+					return;
+				}
+				
 				$.ajax({
 					method: "GET",
 					url: "/tupyo/result",		

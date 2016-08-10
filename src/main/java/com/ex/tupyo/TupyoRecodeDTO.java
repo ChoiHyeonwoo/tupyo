@@ -1,6 +1,6 @@
 package com.ex.tupyo;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class TupyoRecodeDTO {
 	
@@ -17,8 +17,14 @@ public class TupyoRecodeDTO {
 	public void setT_date(Date t_date) {
 		this.t_date = t_date;
 	}
-	public TupyoRecodeDTO() {
+	public TupyoRecodeDTO(int _pk_tid, int _t_id, String _t_member, String _t_content, Date _t_date) {
 		// TODO Auto-generated constructor stub
+		this.pk_tid = _pk_tid;
+		this.t_id = _t_id;
+		this.t_member = _t_member;
+		this.t_content = _t_content;
+		this.t_date = _t_date;
+			
 	}
 	public int getPk_tid() {
 		return pk_tid;

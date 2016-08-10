@@ -18,8 +18,6 @@
 <body>
 
 		아이디 : <input type = "text" id="logid" value="<%=id %>" readonly/> <br /> 
-		비밀번호 : <input type = "password" id="password"/><br /> 
-		비밀번호 확인 : <input type = "password" id="password_confirm"/><br />
 		이름: <input type = "text" id="name" value="<%=name %>"/> <br />
 		<input type="button" onclick="member_update();"  value="수정" /> <a href="/tupyo">취소</a>
 
@@ -27,24 +25,22 @@
 	<script>
 		function member_update(){
 			var id = $("#logid").val();
-			var password = $("#password").val();
-			var password_confirm = $("#password_confirm").val();
 			var name = $("#name").val();
+			
+			if(name == 'null' || name =='(null)'){
+				alert("부적절한 이름 입니다.");
+				return;
+			}
+			
 			if(id == ""){
 				alert("아이디를 입력해 주세요");
-			}else if(password == "" || password_confirm == "")
-			{
-				alert("비밀번호를 입력해 주세요");
 			}
 			else if(name == ""){
 				alert("이름을 입력해 주세요.");
 			}
-			else if(password!=password_confirm){
-				alert("비밀번호가 일치하지 않습니다.");
-			}else{
+			else{
 				$.post("/tupyo/m_update_complete", {
 					id: id,
-					password: password,
 					name: name
 				})
 				.done(function(msg){

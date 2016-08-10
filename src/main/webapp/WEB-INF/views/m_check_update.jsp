@@ -14,8 +14,8 @@
 
 	%>
 	<script>
-		var id = <%=id %>;
-		if (id == null)
+		var id = '<%=id %>';
+		if (id == 'null')
 			{
 				alert("로그인 후에 이용바랍니다.");
 				location.href = "/tupyo";
@@ -28,8 +28,7 @@
 	</script>
 </head>
 <body>
-	M_CHECK_UPDATE.JSP
-	
+
 	<h1>비밀번호를 입력해 주시기 바랍니다.</h1><br />
 
 		비밀번호 입력 : <input type="password" id="curr_password" /> <br />

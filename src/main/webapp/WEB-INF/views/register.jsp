@@ -10,15 +10,11 @@
 	String id = (String)session.getAttribute("id");
 	String pk_id = (String)session.getAttribute("pk_id");
 	String name= (String)session.getAttribute("name");
-	
-	out.println(id);
-	out.println(name);
-	out.println(pk_id);
 	%>
 	
-	var id =<%=id%>;
+	var id ='<%=id%>';
 	
-	if(id==null){	
+	if(id=='null'){	
 		alert("로그인 먼저 하세요");
 		location.href = "/tupyo";
 }
@@ -57,21 +53,31 @@
 		}
 
 		function reg_poll(){
+			var blank_pattern = /^\s+|\s+$/g;
+			
 			var poll_title = $("#poll_title").val();
 			var writer = "<%=name%>";
 			var duplicated = $(':radio[name="repoll"]:checked').val();
 			var multi = $(':radio[name="multi"]:checked').val();
 			var item_arr = new Array();
 			for (var i = 0; i < item_number; i++){	
-				item_arr.push($("#items"+i+"").val());
 				if($("#items"+i+"").val()==""){
 					alert("항목을 작성해 주세요.");
 					return;
+				}else if( $("#items"+i+"").val().replace( blank_pattern, '' ) == "" ){
+				    alert("투표항목에 공백만 입력되었습니다");
+				    return;
+				}else{
+					item_arr.push($("#items"+i+"").val());
 				}
+
 			}
-			if(poll_title ==""){
+			if(poll_title==""){
 				alert("투표제목을 작성해주세요");
-			}else if(duplicated ==""){
+			}else if( poll_title.replace( blank_pattern, '' ) == "" ){
+			    alert("투표제목에 공백만 입력되었습니다");
+			}
+			else if(duplicated ==""){
 				alert("중복여부를 선택해주세요");
 			}else if(multi ==""){
 				alert("다중 투표 여부를 선택해주세요");

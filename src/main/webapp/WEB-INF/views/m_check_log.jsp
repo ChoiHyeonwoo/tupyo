@@ -15,8 +15,8 @@
 
 	%>
 	<script>
-		var id =<%=id%>;
-		if (id == null)
+		var id ='<%=id%>';
+		if (id == 'null')
 			{
 				alert("로그인 후에 이용바랍니다.");
 				location.href = "/tupyo";

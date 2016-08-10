@@ -6,6 +6,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<style>
+  table {
+    border-collapse: collapse;
+  }
+  th, td {
+    border: 1px solid #bcbcbc;
+    padding: 5px 10px;
+  }
+  </style>
 </head>
 <body>
 
@@ -25,6 +34,5 @@
 	</table>
 		
 	<a href="/tupyo/">돌아가기</a>
-	
 </body>
 </html>

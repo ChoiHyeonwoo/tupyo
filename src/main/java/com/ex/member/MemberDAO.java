@@ -35,6 +35,7 @@ public class MemberDAO extends BaseDAO{
 	public String check_password(String id, String password){
 		String result = "";
 		String opassword = "";
+		
 		try{			
 			//connection
 			connection = super.dataSource.getConnection();
@@ -46,8 +47,9 @@ public class MemberDAO extends BaseDAO{
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if(resultSet.next()){
+
 				opassword = resultSet.getString("password");
-				
+
 			}
 			
 			if(password.equals(opassword)){
@@ -188,13 +190,17 @@ public class MemberDAO extends BaseDAO{
 					Date reg_date = resultSet.getDate("reg_date");
 					Date drop_date = resultSet.getDate("drop_date");
 					int pk_mid = resultSet.getInt("pk_mid");
-					
+					System.out.println(curr_user+"spacecheck");
 					login(id);
 					
 					MemberDTO mdto = new MemberDTO(id, password, name, curr_user, reg_date, drop_date, pk_mid);
-					
+
 					mdtos.add(mdto);
 					
+				}else if(resultSet.getString("curr_user").equals("n  ")){
+					MemberDTO mdto = new MemberDTO(null, null, null, null, null, null, -1);
+					mdtos.add(mdto);
+					update_log(logid, "login_fail");
 				}else{
 					update_log(logid, "login_fail");
 				}
@@ -254,7 +260,7 @@ public class MemberDAO extends BaseDAO{
 				try{
 					// connection dispose
 					if(connection!=null){
-						connection.setAutoCommit(true);
+
 						connection.close();
 					}
 					if(preparedStatement!=null)
@@ -331,7 +337,6 @@ public class MemberDAO extends BaseDAO{
 			//preparedStatement
 			String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content, ip_address) values (chw_mlog_seq.nextval, ?, sysdate, ?, ?)";
 			
-			
 			preparedStatement = connection.prepareStatement(query2);
 			preparedStatement.setString(1, loglid);
 			preparedStatement.setString(2, log_content);
@@ -350,7 +355,7 @@ public class MemberDAO extends BaseDAO{
 			try{
 				// connection dispose
 				if(connection!=null){
-					connection.setAutoCommit(true);
+					
 					connection.close();
 				}				
 				if(preparedStatement!=null)
@@ -366,7 +371,7 @@ public class MemberDAO extends BaseDAO{
 		
 		
 	}
-	public void update(String pk_lid, String n_id, String n_password, String n_name){
+	public void update(String pk_lid, String n_id,String n_password,  String n_name){
 		try{
 			//connection
 			connection = super.dataSource.getConnection();
@@ -379,6 +384,48 @@ public class MemberDAO extends BaseDAO{
 			preparedStatement.setString(2, n_password);
 			preparedStatement.setString(3, n_name);
 			preparedStatement.setInt(4, Integer.parseInt(pk_lid));
+			
+			int rn = preparedStatement.executeUpdate();
+			if(rn< 1){
+				connection.rollback();
+			}
+			connection.commit();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				// connection dispose
+				if(connection!=null){
+					connection.setAutoCommit(true);
+					connection.close();
+				}
+					
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+		}
+		
+	}
+	public void update_info(String pk_lid, String n_id, String n_name){
+		try{
+			//connection
+			connection = super.dataSource.getConnection();
+			connection.setAutoCommit(false);
+			//preparedStatement
+			String query2 = "update chw_member set id=?, name=? where pk_mid=?";
+			
+			preparedStatement = connection.prepareStatement(query2);
+			preparedStatement.setString(1, n_id);
+			preparedStatement.setString(2, n_name);
+			preparedStatement.setInt(3, Integer.parseInt(pk_lid));
 			
 			int rn = preparedStatement.executeUpdate();
 			if(rn< 1){
@@ -475,6 +522,10 @@ public class MemberDAO extends BaseDAO{
 					log_content = "로그아웃";
 				}else if((resultSet.getString("log_content")).equals("info_update")){
 					log_content = "정보수정";
+				}else if((resultSet.getString("log_content")).equals("password_update")){
+					log_content = "정보수정";
+				}else if((resultSet.getString("log_content")).equals("login_fail")){
+					log_content = "로그인 실패";
 				}else if((resultSet.getString("log_content")).equals("login_fail")){
 					log_content = "로그인 실패";
 				}else {

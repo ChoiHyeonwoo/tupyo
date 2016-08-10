@@ -38,7 +38,41 @@ public class MemberController {
 		return "m_confirm";
 	
 	}
-	
+	@RequestMapping(value = "/m_confirm_password", method=RequestMethod.POST)
+	public String confirm_password(HttpServletRequest request, Model model){
+		
+		model.addAttribute("request", request);
+		
+		String pk_id = (String)request.getSession().getAttribute("pk_id");
+		String id = (String)request.getSession().getAttribute("id");
+		String password = request.getParameter("password");
+		String name = (String)request.getSession().getAttribute("name");
+		
+		MemberDAO mdao = new MemberDAO();
+		mdao.update(pk_id, id, password, name);
+		mdao.update_log(id, "password_update");
+		
+		return "m_confirm_password";
+
+	}
+	@RequestMapping(value = "/m_update_password_log", method=RequestMethod.POST)
+	public void insert_passwords_mlog(HttpServletResponse response, HttpServletRequest request, Model model){
+		
+		model.addAttribute("request", request);
+
+
+		String id = (String)request.getSession().getAttribute("id");
+		
+		MemberDAO mdao = new MemberDAO();
+		mdao.update_log(id, "password_update_fail");
+		
+		try {
+			response.getWriter().print("fail");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 	@RequestMapping(value= "/m_check_id", method=RequestMethod.POST)
 	public void check_id(HttpServletResponse response, HttpServletRequest request, Model model){
 		String id = request.getParameter("id");
@@ -63,7 +97,7 @@ public class MemberController {
 		return "m_login";
 	}
 	@RequestMapping("/m_check")
-	public String check(HttpServletRequest request, Model model){
+	public void check(HttpServletRequest request, HttpServletResponse response, Model model){
 		
 		ArrayList<MemberDTO> mdtos = new ArrayList<MemberDTO>();
 		model.addAttribute("request", request);
@@ -74,18 +108,32 @@ public class MemberController {
 		MemberDAO mdao = new MemberDAO();
 		mdtos = mdao.login_check(id, password);
 		if(mdtos.isEmpty()){
-			model.addAttribute("error", "아이디 비밀번호를 확인해 주세요.");
-			return "/m_login";
+			try {
+				response.getWriter().print("fail");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
+		}else if(mdtos.get(0).pk_mid == -1){
+			try {
+				response.getWriter().print("drop");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		
+		else {
+			request.getSession().setAttribute("pk_id", ""+mdtos.get(0).pk_mid);
+			request.getSession().setAttribute("id", mdtos.get(0).id);
+			request.getSession().setAttribute("name", mdtos.get(0).name);
+			request.getSession().setMaxInactiveInterval(300);
+			model.addAttribute("mdtos", mdtos);
 	
-		request.getSession().setAttribute("pk_id", ""+mdtos.get(0).pk_mid);
-		request.getSession().setAttribute("id", mdtos.get(0).id);
-		request.getSession().setAttribute("name", mdtos.get(0).name);
-		request.getSession().setMaxInactiveInterval(300);
-		model.addAttribute("mdtos", mdtos);
-
-		return "redirect:/";
+			try {
+				response.getWriter().print("success");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	@RequestMapping("/m_logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response){
@@ -120,11 +168,10 @@ public class MemberController {
 		
 		String pk_id = (String)request.getSession().getAttribute("pk_id");
 		String id = request.getParameter("id");
-		String password = request.getParameter("password");
 		String name = request.getParameter("name");
 		
 		MemberDAO mdao = new MemberDAO();
-		mdao.update(pk_id, id, password, name);
+		mdao.update_info(pk_id, id,  name);
 		mdao.update_log(id, "info_update");
 		
 		request.getSession().setAttribute("id", id);
@@ -145,7 +192,13 @@ public class MemberController {
 		String password = request.getParameter("password");
 		
 		MemberDAO mdao = new MemberDAO();
-		String check_password = mdao.check_password(id, password); 
+		String check_password = mdao.check_password(id, password);
+		
+		if(check_password.equals("error")){
+			mdao.update_log(id, "password_confirm_error");
+		}else{
+			mdao.update_log(id, "password_confirm_success");
+		}
 		
 		System.out.println("패스워드 확인 결과: " +check_password);
 		model.addAttribute("result",check_password);
@@ -209,6 +262,12 @@ public class MemberController {
 
 		return "/m_destroy";
 	}
-	
+	@RequestMapping(value = "/m_update_password")
+	public String update_password(HttpServletRequest request, HttpServletResponse response, Model model){
+		
+		model.addAttribute("request", request);
+		
+		return "/m_update_password";
+	}
 	
 }
