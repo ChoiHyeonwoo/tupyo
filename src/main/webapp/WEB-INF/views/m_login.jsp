@@ -10,10 +10,18 @@
 </head>
 <body>
 
+<table>
+	<tr>
+		<td>아이디</td>
+		<td><input type= "text" id="logid" /></td>
+	</tr>
+	<tr>
+		<td>패스워드</td>
+		<td><input type= "password" id="logpw" /></td>
+	</tr>
+</table>
 
-		아이디 : <input type= "text" id="logid" /><br />
-		패스워드 : <input type= "password" id="logpw" /><br />
-		<input type="button" onclick="formCHK()" value="로그인" /><a href = "/tupyo">취소</a>
+	<input type="button" onclick="formCHK()" value="로그인" /><a href = "/tupyo">취소</a>
 
 	<script>
 	function formCHK() {

@@ -7,8 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<script>
-	alert("${confirm}");
-</script>
+
 </body>
 </html>

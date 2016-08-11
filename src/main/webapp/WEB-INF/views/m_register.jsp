@@ -8,10 +8,26 @@
 <title>Insert title here</title>
 </head>
 <body>
-		아이디 : <input type = "text" id="logid"/> <input type="button" value="중복확인" onclick="id_check()"><a id="id_check_result"></a> <br /> 
-		비밀번호 : <input type = "password" id="password"/><br /> 
-		비밀번호 확인 : <input type = "password" id="password_confirm"/><br />
-		이름: <input type = "text" id="name"/> <br />
+	<table>
+		<tr>
+			<td>아이디 </td>
+			<td><input type = "text" id="logid"/></td>
+			<td><input type="button" value="중복확인" onclick="id_check()"></td>
+			<td><a id="id_check_result"></a></td>
+		</tr>
+		<tr>
+			<td>비밀번호 </td>
+			<td><input type = "password" id="password"/></td>
+		</tr>
+		<tr>
+			<td>비밀번호 확인</td>
+			<td><input type = "password" id="password_confirm"/></td>
+		</tr>
+		<tr>
+			<td>이름</td>
+			<td><input type = "text" id="name"/></td> 
+		</tr>
+	</table>
 		<input type="button" onclick="member_reg()" value="회원가입" /> <input type="button" value="취소" onclick="cancel()"/>
 <script>
 	function cancel(){

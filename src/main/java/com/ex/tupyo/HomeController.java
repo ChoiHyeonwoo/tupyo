@@ -28,14 +28,30 @@ public class HomeController {
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
+	public String home(HttpServletResponse response, HttpServletRequest request, Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
+		model.addAttribute("request", request);
 		
-		BaseDAO dao =  new BaseDAO();
-		ArrayList<TupyoDTO> title = dao.titleView();
-		
-		model.addAttribute("title", title);
+		String option = request.getParameter("option");
+		String content = request.getParameter("content");
 
+		String arr[] ={option, content};
+				
+		BaseDAO dao =  new BaseDAO();
+		ArrayList<TupyoDTO> title = dao.titleView(arr);
+		if(title.size()==0){
+			try {
+				response.getWriter().print("none");
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		model.addAttribute("search_option", option);
+		model.addAttribute("search_content", content);
+		model.addAttribute("title", title);
+		
 		return "home";
 	}
 	@RequestMapping(value = "/result", method=RequestMethod.GET)
@@ -68,41 +84,8 @@ public class HomeController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
-		
-		
 	}
-	@RequestMapping(value = "/search_tupyo", method=RequestMethod.POST)
-	public void search_poll(HttpServletResponse response,Model model, HttpServletRequest request){
-
-		model.addAttribute("request", request);
 		
-		String option = request.getParameter("option");
-		String content = request.getParameter("content");
-		System.out.println(option + "  " +content);
-		BaseDAO dao =  new BaseDAO();
-		ArrayList<TupyoDTO> dtos = dao.search_tupyo(option,content);
-		
-		if(dtos.size()<=0){
-			try {
-				response.getWriter().print("error");
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}	
-		}
-		else{
-			model.addAttribute("dtos", dtos);
-			
-			try {
-				response.getWriter().print("success");
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}	
-		}
-	}
-	
-	
 	@RequestMapping(value = "/result_multi", method=RequestMethod.POST)
 	public void result_multi(@RequestParam(value = "item_arr[]", required = true) String[] t_item_content, HttpServletResponse response,Model model, HttpServletRequest request){
 		
@@ -136,17 +119,18 @@ public class HomeController {
 		
 		
 	}
-	@RequestMapping(value = "/execute", method=RequestMethod.GET)
+	@RequestMapping(value = "/execute", method={RequestMethod.POST, RequestMethod.GET})
 	public String execute(HttpServletRequest request, Model model){
 		
 		model.addAttribute("request", request);
 		
-		String id = request.getParameter("id");
-		model.addAttribute("id", id);
+		String t_id = request.getParameter("t_id");
+		
+		model.addAttribute("id", t_id);
 		BaseDAO dao = new BaseDAO();
 		
-		ArrayList<TupyoItemDTO> tidtos =  dao.tupyo_detail_view(id);
-		TupyoDTO tdto =  dao.result(id);
+		ArrayList<TupyoItemDTO> tidtos =  dao.tupyo_detail_view(t_id);
+		TupyoDTO tdto =  dao.result(t_id);
 
 		model.addAttribute("tidtos", tidtos);
 
@@ -185,17 +169,17 @@ public class HomeController {
 		HttpSession session = request.getSession();
 		String t_member = (String)session.getAttribute("id");
 		
-		String id = request.getParameter("id");
-		model.addAttribute("id", id);
+		String t_id = request.getParameter("t_id");
+		model.addAttribute("id", t_id);
 		
 		BaseDAO dao = new BaseDAO();
 		
-		ArrayList<TupyoItemDTO> tidtos =  dao.tupyo_detail_view(id);
-		ArrayList<TupyoRecodeDTO> trdtos =  dao.tupyo_log_view(id, t_member);
+		ArrayList<TupyoItemDTO> tidtos =  dao.tupyo_detail_view(t_id);
+		ArrayList<MyTupyoContentNumber> mtcns = dao.tupyo_log_view(t_id, t_member);
 		model.addAttribute("t_title", tidtos.get(0).getT_title());
 		model.addAttribute("tidtos", tidtos);
 
-		model.addAttribute("trdtos", trdtos);	
+		model.addAttribute("mtcns", mtcns);	
 		
 		return "t_result";
 	}

@@ -16,9 +16,16 @@
 	%>
 </head>
 <body>
-
-		아이디 : <input type = "text" id="logid" value="<%=id %>" readonly/> <br /> 
-		이름: <input type = "text" id="name" value="<%=name %>"/> <br />
+	<table>
+		<tr>
+			<td>아이디</td>
+			<td><input type = "text" id="logid" value="<%=id %>" readonly/></td>
+		</tr>
+		<tr>
+			<td>이름</td>
+			<td><input type = "text" id="name" value="<%=name %>"/></td>
+		</tr>
+	</table>
 		<input type="button" onclick="member_update();"  value="수정" /> <a href="/tupyo">취소</a>
 
 	
@@ -31,7 +38,11 @@
 				alert("부적절한 이름 입니다.");
 				return;
 			}
-			
+			var blank_pattern = /^\s+|\s+$/g;
+			if( name.replace( blank_pattern, '' ) == "" ){
+			    alert("이름에 공백만 입력되었습니다");
+			    return;
+			}
 			if(id == ""){
 				alert("아이디를 입력해 주세요");
 			}
@@ -49,7 +60,7 @@
 					})
 				.fail(function(xhr, status, error){
 					// error handling
-					alert("error");
+					alert("에러 발생. 잠시후에 시도하세요.");
 				});
 			}
 		}

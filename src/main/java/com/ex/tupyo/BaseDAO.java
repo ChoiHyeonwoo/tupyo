@@ -4,8 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -77,73 +78,41 @@ public class BaseDAO {
 	}
 	
 	
-	public ArrayList<TupyoDTO> titleView(){
+	public ArrayList<TupyoDTO> titleView(String[] strs){
 		// home.jsp에서 타이틀보여주기
 		ArrayList<TupyoDTO> dtos = new ArrayList<TupyoDTO>();
-		
-		
+		String plus ="";
+
 		try{
 			connection = dataSource.getConnection();
 			String query = "select * from chw_tupyo";
-			preparedStatement = connection.prepareStatement(query);
-			resultSet = preparedStatement.executeQuery();
+			
+			if (!(strs[0]==null)){
+				if(strs[0].equals("reg_date")){
+					plus+=" where "+strs[0]+" like '%' || ? || '%'";
+					plus+=" order by reg_date desc";
+					query +=plus;
 
-			while(resultSet.next()){
-			
-				int id = resultSet.getInt("id");
-				String title = resultSet.getString("title");
-				String writer = resultSet.getString("writer");
-				String is_duplicated = resultSet.getString("is_duplicated");
-				Date reg_date = resultSet.getDate("reg_date");
-				int item_number = resultSet.getInt("item_number");
-				String is_multi_check = resultSet.getString("is_multi_check");
-				
-				TupyoDTO dto = new TupyoDTO(id, title,  writer, is_duplicated, reg_date, item_number, is_multi_check);
-				dtos.add(dto);
-			}
-			
-		}catch(SQLException e){
-			e.printStackTrace();
-		}finally{
-			try{
-				if(connection!=null)
-					connection.close();
-				if(preparedStatement!=null)
-					preparedStatement.close();
-				if(resultSet!=null)
-					resultSet.close();
-				
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			
-		}
-		return dtos;
-		
-	}
-	public ArrayList<TupyoDTO> search_tupyo(String option, String content){
-		// home.jsp에서 타이틀보여주기
-		ArrayList<TupyoDTO> dtos = new ArrayList<TupyoDTO>();
-		
-
-		try{
-			connection = dataSource.getConnection();
-			String query = "select * from chw_tupyo where 1=1";
-				if(option.equals("title"))
-				{
-					query +=  "and title = ?";
+					preparedStatement = connection.prepareStatement(query);					
+					preparedStatement.setDate(1, Date.valueOf(strs[1]));
 				}
-			
-			
-			preparedStatement = connection.prepareStatement(query);
-//			preparedStatement.setString(1, option);
-			preparedStatement.setString(1, content);
-			
-			
+				else{
+					plus+=" where "+strs[0]+" like '%' || ? || '%'";
+					plus+=" order by reg_date desc";
+					query +=plus;
+					preparedStatement = connection.prepareStatement(query);
+					preparedStatement.setString(1, strs[1]);
+				}
+			}else{
+				plus+=" order by reg_date desc";
+				query +=plus;
+				preparedStatement = connection.prepareStatement(query);
+			}
+			System.out.println(query);
 			resultSet = preparedStatement.executeQuery();
-			System.out.println(option + "  "  + content);
+
 			while(resultSet.next()){
-			
+
 				int id = resultSet.getInt("id");
 				String title = resultSet.getString("title");
 				String writer = resultSet.getString("writer");
@@ -156,6 +125,8 @@ public class BaseDAO {
 				dtos.add(dto);
 			}
 
+			
+			
 		}catch(SQLException e){
 			e.printStackTrace();
 		}finally{
@@ -172,9 +143,10 @@ public class BaseDAO {
 			}
 			
 		}
+
 		return dtos;
-		
 	}
+	
 	public TupyoDTO result(String t_id){
 		// result.jsp에서 결과 보여주기
 		TupyoDTO dto = null;
@@ -259,12 +231,13 @@ public class BaseDAO {
 		}
 		return result;
 	}
-	public ArrayList<TupyoRecodeDTO> tupyo_log_view(String t_id, String t_member){
-		ArrayList<TupyoRecodeDTO> trdtos = new ArrayList<TupyoRecodeDTO>();
-		
+	public ArrayList<MyTupyoContentNumber> tupyo_log_view(String t_id, String t_member){
+		ArrayList<MyTupyoContentNumber> mtcns = new ArrayList<MyTupyoContentNumber>();
+		ArrayList<String> contents = new ArrayList<String>();
 		try{
-			connection = dataSource.getConnection();			
-			String query = "select * from chw_tupyo_recode where t_id = ? and t_member =?";
+			connection = dataSource.getConnection();
+			
+			String query = "SELECT DISTINCT t_content FROM CHW_TUPYO_RECODE WHERE t_id = ? AND t_member = ?";
 			
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setInt(1, Integer.parseInt(t_id));
@@ -273,17 +246,30 @@ public class BaseDAO {
 			resultSet = preparedStatement.executeQuery();
 				
 		while (resultSet.next()){
-			int pk_tid = resultSet.getInt("pk_tid");
-			int tupyo_id = resultSet.getInt("t_id");
-			String tupyo_member = resultSet.getString("t_member");
 			String t_content = resultSet.getString("t_content");
-			Date t_date = resultSet.getDate("t_date");
+			contents.add(t_content);
+		}
+		int arr[] = new int[contents.size()];
+		
+		for(int i=0; i<contents.size(); i++){
+			query = "SELECT COUNT(*) FROM CHW_TUPYO_RECODE WHERE t_id = ? AND t_member = ? AND t_content = ?";
 			
-			TupyoRecodeDTO trdto = new TupyoRecodeDTO(pk_tid, tupyo_id, tupyo_member, t_content, t_date);
+			preparedStatement = connection.prepareStatement(query);
 			
-			trdtos.add(trdto);
+			preparedStatement.setInt(1, Integer.parseInt(t_id));
+			preparedStatement.setString(2, t_member);
+			preparedStatement.setString(3, contents.get(i));
+			
+			resultSet = preparedStatement.executeQuery();
+						
+			if(resultSet.next()){
+				arr[i] = resultSet.getInt("count(*)");
+			}
+			MyTupyoContentNumber mtcn = new MyTupyoContentNumber(arr[i], contents.get(i));
+			mtcns.add(mtcn);
 			
 		}
+		
 
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -303,7 +289,7 @@ public class BaseDAO {
 			}
 
 		}
-		return trdtos;
+		return mtcns;
 	}
 	public void tupyo_log(String t_id, String t_member, String t_content){
 		try{

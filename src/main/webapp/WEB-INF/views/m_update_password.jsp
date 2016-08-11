@@ -1,18 +1,18 @@
 <%@ page session="false" language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% 
+	HttpSession session = request.getSession();
+	String id = (String)session.getAttribute("id");
+	String pk_id = (String)session.getAttribute("pk_id");
+	String name= (String)session.getAttribute("name");
+%>	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
-	<% 
-		HttpSession session = request.getSession();
-		String id = (String)session.getAttribute("id");
-		String pk_id = (String)session.getAttribute("pk_id");
-		String name= (String)session.getAttribute("name");
 
-	%>	
 	<script>
 		var id = '<%=id%>';
 		if (id == 'null')
@@ -24,11 +24,22 @@
 </head>
 <body>
 <h1>비밀번호변경 페이지입니다.</h1><br />
-
-		현재 비밀번호 : <input type="password" id="curr_password" /> <h6 id="errornot"></h6> <br />
-		새 비밀번호 : <input type="password" id="new_password" /> <br />
-		새 비밀번호 확인 : <input type="password" id="new_password_confirm" /> <br />
-		<input type="button" onclick="pwd_check()" value="확인"/>
+	<table>
+		<tr>
+			<td>현재 비밀번호</td>
+			<td><input type="password" id="curr_password" /></td>
+			<td><p id="errornot"></p></td>
+		</tr>
+		<tr>
+			<td>새 비밀번호</td>
+			<td><input type="password" id="new_password" /></td>
+		</tr>
+		<tr>
+			<td>새 비밀번호 확인</td>
+			<td><input type="password" id="new_password_confirm" /></td>
+		</tr>	
+	</table>
+<input type="button" onclick="pwd_check()" value="확인"/>
 
 	<script>
 	$(function(){
@@ -52,8 +63,6 @@
 		});
 
 	function pwd_check(){
-		
-
 		var curr_password = $("#curr_password").val();
 		var new_password = $("#new_password").val();
 		var new_password_confirm = $("#new_password_confirm").val();

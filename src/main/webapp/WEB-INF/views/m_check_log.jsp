@@ -48,7 +48,7 @@
 				password: password
 			},
 			success: function(result){
-				alert(result);
+
 				if(result=="error"){
 					alert("비밀번호를 다시 입력해주세요");
 				}

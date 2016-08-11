@@ -37,8 +37,8 @@
 	<h3>${t_title}</h3>
 	 <table>
  <tr>
- <td>내가 투표한 항목</td>
- <td>투표한 날짜</td>
+ <td>투표 항목</td>
+ <td>득표수</td>
  
  </tr>
 	<c:forEach items="${tidtos}" var="dto">
@@ -55,19 +55,23 @@
  <br />
  <h3>나의 투표 기록</h3>   
  <table>
- <tr>
- <td>내가 투표한 항목</td>
- <td>투표한 날짜</td>
- 
- </tr>
-	<c:forEach items="${trdtos}" var="dto">
-<tr>
-	<td>${dto.t_content}</td>
-	<td>${dto.t_date}</td>
-</tr>
+	 <tr>
+		 <td>내가 투표한 항목</td>
+		 <td>내가 투표한 횟수</td>
+	 </tr>
+
+	<c:forEach items="${mtcns}" var="dto">
+	<tr>
+		<td>${dto.select_content}</td>
+		<td>${dto.select_num}</td>
+	</tr>
 	</c:forEach>
 
-	</table>
+</table>
+	<c:if test="${empty mtcns}">
+         <h3>투표한 기록이 없습니다.</h3>
+    </c:if>
+
 <br />
 	<a href = "/tupyo" >돌아가기</a>
 

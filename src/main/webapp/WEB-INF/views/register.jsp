@@ -24,15 +24,29 @@
 <title>Insert title here</title>
 </head>
 <body>
-	register.jsp
-	<br />
-	
-	투표제목 : <input type="text" id="poll_title" /><br />
-	중복 여부: <input type="radio" name="repoll" value="yes" checked="checked" /> 허용 <input type="radio" name="repoll" value="no" />불가<br />
-	다중 투표 여부: <input type="radio" name="multi" value="yes" checked="checked" /> 허용 <input type="radio" name="multi" value="no" />불가<br />
-	<input type="button" onclick="add_html()" value="항목추가" />&nbsp;&nbsp;<input type="button" onclick="delete_html()" value="항목제거" />
+	<table>
+		<tr>
+			<td>투표제목</td>
+			<td><input type="text" id="poll_title" /></td>
+		</tr>
+		<tr>
+			<td>중복 여부</td>
+			<td width="100"><input type="radio" name="repoll" value="yes" checked="checked" /> 허용 </td>
+			<td width="100"><input type="radio" name="repoll" value="no" />불가</td>
+		</tr>
+		<tr>
+			<td>다중 투표 여부</td>
+			<td width="100"><input type="radio" name="multi" value="yes" checked="checked" /> 허용 </td>
+			<td width="100"><input type="radio" name="multi" value="no" />불가</td>
+		</tr>
+		<tr>
+			<td><input type="button" onclick="add_html()" value="항목추가" /></td>
+			<td><input type="button" onclick="delete_html()" value="항목제거" /></td>
+		</tr>
+	</table>
 	<div class="items">
-		<input type="text" id="items0"/><input type="text" id="items1"/>
+		<input type="text" id="items0"/><br />
+		<input type="text" id="items1"/><br />
 	</div>
 
 	<input type="button" value="투표등록" onclick="reg_poll()" />
@@ -101,7 +115,7 @@
 					})
 				.fail(function(xhr, status, error){
 					// error handling
-					alert("error");
+					alert("에러 발생. 잠시후에 시도해주세요.");
 				});
 			}
 		}

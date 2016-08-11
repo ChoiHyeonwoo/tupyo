@@ -504,7 +504,7 @@ public class MemberDAO extends BaseDAO{
 		
 		try{
 			connection = super.dataSource.getConnection();
-			String query = "select * from chw_mlog where mlogid= ? order by log_date desc";
+			String query = "select pk_lid, mlogid, to_char(log_date, 'yyyy-mm-dd hh24:mm:ss') as log_date, log_content, ip_address from chw_mlog where mlogid = ? order by log_date DESC";
 
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, _mlogid);
@@ -514,7 +514,7 @@ public class MemberDAO extends BaseDAO{
 			while(resultSet.next()){
 				int pk_lid = resultSet.getInt("pk_lid");
 				String mlogid = resultSet.getString("mlogid");	
-				Date log_date = resultSet.getDate("log_date");
+				String log_date = resultSet.getString("log_date");
 				String log_content = "";
 				if((resultSet.getString("log_content")).equals("Login")){
 					log_content = "로그인";
@@ -523,11 +523,15 @@ public class MemberDAO extends BaseDAO{
 				}else if((resultSet.getString("log_content")).equals("info_update")){
 					log_content = "정보수정";
 				}else if((resultSet.getString("log_content")).equals("password_update")){
-					log_content = "정보수정";
+					log_content = "비밀번호 수정";
 				}else if((resultSet.getString("log_content")).equals("login_fail")){
 					log_content = "로그인 실패";
-				}else if((resultSet.getString("log_content")).equals("login_fail")){
-					log_content = "로그인 실패";
+				}else if((resultSet.getString("log_content")).equals("password_confirm_success")){
+					log_content = "비밀번호 확인 성공";
+				}else if((resultSet.getString("log_content")).equals("password_confirm_error")){
+					log_content = "비밀번호 확인 성공";
+				}else if((resultSet.getString("log_content")).equals("password_update_fail")){
+					log_content = "비밀번호 변경 실패";
 				}else {
 					log_content = "탈퇴 계정";
 				}
