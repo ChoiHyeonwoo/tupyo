@@ -175,7 +175,7 @@ public class HomeController {
 		BaseDAO dao = new BaseDAO();
 		
 		ArrayList<TupyoItemDTO> tidtos =  dao.tupyo_detail_view(t_id);
-		ArrayList<MyTupyoContentNumber> mtcns = dao.tupyo_log_view(t_id, t_member);
+		ArrayList<MyTupyoContentNumberDTO> mtcns = dao.tupyo_log_view(t_id, t_member);
 		model.addAttribute("t_title", tidtos.get(0).getT_title());
 		model.addAttribute("tidtos", tidtos);
 

@@ -231,8 +231,8 @@ public class BaseDAO {
 		}
 		return result;
 	}
-	public ArrayList<MyTupyoContentNumber> tupyo_log_view(String t_id, String t_member){
-		ArrayList<MyTupyoContentNumber> mtcns = new ArrayList<MyTupyoContentNumber>();
+	public ArrayList<MyTupyoContentNumberDTO> tupyo_log_view(String t_id, String t_member){
+		ArrayList<MyTupyoContentNumberDTO> mtcns = new ArrayList<MyTupyoContentNumberDTO>();
 		ArrayList<String> contents = new ArrayList<String>();
 		try{
 			connection = dataSource.getConnection();
@@ -265,7 +265,7 @@ public class BaseDAO {
 			if(resultSet.next()){
 				arr[i] = resultSet.getInt("count(*)");
 			}
-			MyTupyoContentNumber mtcn = new MyTupyoContentNumber(arr[i], contents.get(i));
+			MyTupyoContentNumberDTO mtcn = new MyTupyoContentNumberDTO(arr[i], contents.get(i));
 			mtcns.add(mtcn);
 			
 		}
