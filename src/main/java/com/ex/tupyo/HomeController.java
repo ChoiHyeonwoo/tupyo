@@ -27,19 +27,20 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/"/*, method = RequestMethod.POST*/)
 	public String home(HttpServletResponse response, HttpServletRequest request, Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		model.addAttribute("request", request);
 		
 		String option = request.getParameter("option");
 		String content = request.getParameter("content");
+		
 
 		String arr[] ={option, content};
 				
 		BaseDAO dao =  new BaseDAO();
-		ArrayList<TupyoDTO> title = dao.titleView(arr);
-		if(title.size()==0){
+		ArrayList<TupyoDTO> tupyo_list = dao.titleView(arr);
+		if(tupyo_list.size()==0){
 			try {
 				response.getWriter().print("none");
 
@@ -50,7 +51,7 @@ public class HomeController {
 		
 		model.addAttribute("search_option", option);
 		model.addAttribute("search_content", content);
-		model.addAttribute("title", title);
+		model.addAttribute("tupyo_list", tupyo_list);
 		
 		return "home";
 	}

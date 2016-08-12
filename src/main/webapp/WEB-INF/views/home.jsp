@@ -56,7 +56,7 @@
 			
 		}
 		
-		function myFunction(){
+		function select_value_modify(){
 			var selectValue = document.getElementById('option').value;
 			if(selectValue=="reg_date"){
 				$("#content").attr("type", "date");
@@ -74,7 +74,12 @@
 			var option = $("#option").val();
 			var content = $("#content").val();
 			
-			if(content == ''){
+			
+			if (option==null){
+				alert("검색할 항목을 설정해 주세요");
+				return;	
+			}
+			else if(content == ''){
 				alert("검색할 내용을 입력해 주세요");
 				return;	
 			}
@@ -125,7 +130,7 @@
 	투표목록입니다.
 </h1>
 	<form action="/tupyo" name="tupyo" id="tupyo" method="GET"> 
-		<select id="option" name="option" onchange="myFunction()" >
+		<select id="option" name="option" onchange="select_value_modify()" >
 		  <option value="title">제목</option>
 		  <option value="writer">작성자</option>
 		  <option value="reg_date">날짜</option>
@@ -146,7 +151,7 @@
 			<td>투표 링크</td>
 		</tr>
 
-	<c:forEach items="${title}" var="dto">
+	<c:forEach items="${tupyo_list}" var="dto">
 		<tr>
 			<td><a href="javascript:go_tupyo_result('${dto.id}')"> ${dto.title} </a></td>
 			<td>${dto.writer}</td>
@@ -159,7 +164,7 @@
 	
 	</c:forEach>
 	</table>
-	<c:if test="${empty title}">
+	<c:if test="${empty tupyo_list}">
          <h3>투표 등록 기록이 없습니다.</h3>
     </c:if>
 	<br />
