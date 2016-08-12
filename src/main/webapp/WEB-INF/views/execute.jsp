@@ -103,7 +103,7 @@ if(id=='null'){
 			});
 		}
 								
-			function result_get(){
+		function result_get(){
 
 				var survay = $(':radio[name="survay"]:checked').val();
 				if(survay ==null){
@@ -130,7 +130,6 @@ if(id=='null'){
 					}
 					}
 				});
-
 		}
 	</script>
 </body>

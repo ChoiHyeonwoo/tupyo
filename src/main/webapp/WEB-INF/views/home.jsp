@@ -11,9 +11,7 @@
 		}
 		String pk_id = (String)session.getAttribute("pk_id");
 		String name= (String)session.getAttribute("name");
-	
 	%>
-<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <html>
 <head>
 	<title>Home</title>
@@ -26,8 +24,8 @@
     padding: 5px 10px;
   }
 </style>
-</head>
-	<script>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+<script>
 		window.onload = function(){
 			var id = '<%=id%>';
 
@@ -55,15 +53,7 @@
 			}
 			
 		}
-		
-		function select_value_modify(){
-			var selectValue = document.getElementById('option').value;
-			if(selectValue=="reg_date"){
-				$("#content").attr("type", "date");
-			}else{
-				$("#content").attr("type", "text");
-			}
-		}
+
 		function search_poll(){
 			var id = '<%=id%>';
 
@@ -73,8 +63,7 @@
 			}			
 			var option = $("#option").val();
 			var content = $("#content").val();
-			
-			
+
 			if (option==null){
 				alert("검색할 항목을 설정해 주세요");
 				return;	
@@ -119,18 +108,24 @@
 			document.tupyo.submit();
 			
 		}
-		
-		
+		function go_tupyo_register(){
+			
+			var id = '<%=id%>';
+			
+			if(id==''){
+				alert("로그인 후에 진행 바랍니다");
+				return;
+			}
+			location.href="/tupyo/register";
+		}
 	</script>
+</head>
 <body>		
-
-	
-
-<h1>
-	투표목록입니다.
-</h1>
+	<h1>
+		투표목록입니다.
+	</h1>
 	<form action="/tupyo" name="tupyo" id="tupyo" method="GET"> 
-		<select id="option" name="option" onchange="select_value_modify()" >
+		<select id="option" id="option" name="option"  onchange="select_value_modify(this.value)" >
 		  <option value="title">제목</option>
 		  <option value="writer">작성자</option>
 		  <option value="reg_date">날짜</option>
@@ -143,33 +138,32 @@
 	
 	<table>
 		<tr>
-			<td>투표 제목</td>
-			<td>투표 작성자</td>
-			<td>투표 중복허용 여부</td>
-			<td>투표 다중선택 허용 여부</td>
-			<td>투표 등록 날짜</td>
-			<td>투표 링크</td>
+			<td style="text-align:center">투표 제목</td>
+			<td style="text-align:center">투표 작성자</td>
+			<td style="text-align:center">투표 등록 날짜</td>
+			<td style="text-align:center">투표 링크</td>
 		</tr>
-
+	<c:if test="${empty tupyo_list}">
+		<tr>
+			<td style="text-align:center; height:70" colspan="6">기록이 없습니다.</td>
+		</tr>       
+    </c:if>
 	<c:forEach items="${tupyo_list}" var="dto">
+
 		<tr>
 			<td><a href="javascript:go_tupyo_result('${dto.id}')"> ${dto.title} </a></td>
 			<td>${dto.writer}</td>
-			<td>${dto.is_duplicated}</td>
-			<td>${dto.is_multi_check}</td>
-			<td>${dto.reg_date}</td>
+			<td style="text-align:center">${dto.reg_date}</td>
 	
 		<td><a href="javascript:go_tupyo_execute('${dto.id}')" > 투표하러가기 </a></td>
 		</tr>
-	
+
 	</c:forEach>
 	</table>
-	<c:if test="${empty tupyo_list}">
-         <h3>투표 등록 기록이 없습니다.</h3>
-    </c:if>
+
 	<br />
 	
-	<a id="t_register" href = "/tupyo/register">투표 등록하기</a>
+	<a href="javascript:go_tupyo_register()">투표 등록하기</a>
 	&nbsp;&nbsp;<a id="log_check" href = "/tupyo/m_logout">로그아웃</a>&nbsp;&nbsp;
 	<a id="password_change" href = "/tupyo/m_update_password">비밀번호 변경</a>
 	<a id="member_check" href= "/tupyo/m_check_update">회원정보수정</a>&nbsp;&nbsp;<a id="member_drop" href = "/tupyo/m_check_destroy">회원탈퇴</a>

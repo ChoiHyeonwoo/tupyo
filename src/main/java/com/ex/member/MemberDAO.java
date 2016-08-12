@@ -277,11 +277,7 @@ public class MemberDAO extends BaseDAO{
 			
 		}
 	public void logout(String loglid){
-		
-		if(loglid.equals(null)){
-			return;
-		}
-		
+				
 		try{
 			//connection
 			connection = super.dataSource.getConnection();

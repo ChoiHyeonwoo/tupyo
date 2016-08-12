@@ -53,7 +53,7 @@
 	<script>
 		var item_number = 2;
 		function add_html(){
-			$("div").append('<input type="text" id="items'+item_number+'"/>');
+			$("div").append('<input type="text" id="items'+item_number+'"/> <br id="br'+item_number+'" />');
 			item_number++;
 		}
 		function delete_html(){
@@ -63,7 +63,7 @@
 			}
 			item_number--;
 			$("#items"+item_number).remove();
-			
+			$("#br"+item_number).remove();
 		}
 
 		function reg_poll(){
@@ -74,18 +74,8 @@
 			var duplicated = $(':radio[name="repoll"]:checked').val();
 			var multi = $(':radio[name="multi"]:checked').val();
 			var item_arr = new Array();
-			for (var i = 0; i < item_number; i++){	
-				if($("#items"+i+"").val()==""){
-					alert("항목을 작성해 주세요.");
-					return;
-				}else if( $("#items"+i+"").val().replace( blank_pattern, '' ) == "" ){
-				    alert("투표항목에 공백만 입력되었습니다");
-				    return;
-				}else{
-					item_arr.push($("#items"+i+"").val());
-				}
-
-			}
+			
+			
 			if(poll_title==""){
 				alert("투표제목을 작성해주세요");
 			}else if( poll_title.replace( blank_pattern, '' ) == "" ){
@@ -95,8 +85,21 @@
 				alert("중복여부를 선택해주세요");
 			}else if(multi ==""){
 				alert("다중 투표 여부를 선택해주세요");
-			}else if(item_arr == {}){
-				alert("항목을 추가해 주세요.");
+			}
+			else if(item_arr == {}){
+				alert("항목을 입력해 주세요.");
+			}else if(item_arr != {}){
+				for (var i = 0; i < item_number; i++){	
+					if($("#items"+i+"").val()==""){
+						alert("항목을 입력해 주세요.");
+						return;
+					}else if( $("#items"+i+"").val().replace( blank_pattern, '' ) == "" ){
+					    alert("투표항목에 공백만 입력되었습니다");
+					    return;
+					}else{
+						item_arr.push($("#items"+i+"").val());
+					}
+				}
 			}
 			else{
 				$.ajaxSettings.traditional = true;

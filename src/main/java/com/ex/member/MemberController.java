@@ -61,10 +61,10 @@ public class MemberController {
 		model.addAttribute("request", request);
 
 
-		String id = (String)request.getSession().getAttribute("id");
+		String m_id = (String)request.getSession().getAttribute("id");
 		
 		MemberDAO mdao = new MemberDAO();
-		mdao.update_log(id, "password_update_fail");
+		mdao.update_log(m_id, "password_update_fail");
 		
 		try {
 			response.getWriter().print("fail");
@@ -79,21 +79,18 @@ public class MemberController {
 		
 		MemberDAO mdao = new MemberDAO();
 		String result = mdao.check_id(id);
-		System.out.println(result);
-		
+
 		try {
 			response.getWriter().print(result);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
 		
-
 	}
 	
 	@RequestMapping("/m_login")
 	public String login(Model model){
-		
-		
+				
 		return "m_login";
 	}
 	@RequestMapping("/m_check")
@@ -138,9 +135,9 @@ public class MemberController {
 	@RequestMapping("/m_logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response){
 		
-		String loglid = (String)request.getSession().getAttribute("id");
+		String logmid = (String)request.getSession().getAttribute("id");
 		MemberDAO mdao = new MemberDAO();
-		mdao.logout(loglid);
+		mdao.logout(logmid);
 		
 		request.getSession().invalidate();
 			

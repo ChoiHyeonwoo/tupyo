@@ -27,14 +27,13 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/"/*, method = RequestMethod.POST*/)
-	public String home(HttpServletResponse response, HttpServletRequest request, Locale locale, Model model) {
+	@RequestMapping(value = "/", method ={RequestMethod.POST, RequestMethod.GET})
+	public String home(/*@RequestBody MultiValueMap<String, String> params,*/ HttpServletResponse response, HttpServletRequest request, Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		model.addAttribute("request", request);
-		
+				
 		String option = request.getParameter("option");
 		String content = request.getParameter("content");
-		
 
 		String arr[] ={option, content};
 				
@@ -184,6 +183,4 @@ public class HomeController {
 		
 		return "t_result";
 	}
-	
-	
 }

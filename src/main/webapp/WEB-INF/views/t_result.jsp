@@ -59,7 +59,11 @@
 		 <td>내가 투표한 항목</td>
 		 <td>내가 투표한 횟수</td>
 	 </tr>
-
+	<c:if test="${empty mtcns}">
+		<tr>
+			<td style="text-align:center; height:80"  colspan="2">기록이 없습니다.</td>
+		</tr>       
+    </c:if>
 	<c:forEach items="${mtcns}" var="dto">
 	<tr>
 		<td>${dto.select_content}</td>
@@ -68,12 +72,11 @@
 	</c:forEach>
 
 </table>
-	<c:if test="${empty mtcns}">
-         <h3>투표한 기록이 없습니다.</h3>
-    </c:if>
 
 <br />
-	<a href = "/tupyo" >돌아가기</a>
-
+	<a href = "javascript:history.back()" >돌아가기</a>&nbsp;&nbsp;<a href = "/tupyo" >리스트로 가기</a>
+	<c:if test="${empty tupyo_list}">
+     		
+    </c:if>
 </body>
 </html>

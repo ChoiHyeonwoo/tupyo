@@ -1,7 +1,5 @@
 package com.ex.member;
 
-import java.util.Date;
-
 public class MemberLogDTO {
 
 	int pk_lid;
