@@ -78,7 +78,6 @@
 
 			}
 
-	 	     
 			document.tupyo.submit();
 		}
 		function go_tupyo_execute(t_id){
