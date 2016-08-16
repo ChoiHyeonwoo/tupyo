@@ -44,7 +44,7 @@
 			$("#logid").focus();
 			return;
 		}else if(logid == ""){
-			alert("아이디를 입력해 주세요");
+			$("#id_check_result").html("아이디를 입력해 주세요.");
 			$("#logid").focus();
 			return;
 		}
@@ -54,7 +54,7 @@
 			$("#logid").focus();
 			return;
 		}else if( logid.replace( blank_pattern, '' ) == "" ){
-			$("#id_check_result").html("사용불가한 아이디 입니다. 다른 아이디 입력해 주세요.");
+			$("#id_check_result").html("공백만 입력되었습니다.");
 		    $("#logid").focus();
 		    return;
 		}
@@ -138,22 +138,26 @@
 			else if(id_check == 'fail'){
 				return;
 			}
-			else if( password.replace( blank_pattern, '' ) == "" || password_confirm.replace( blank_pattern, '' ) == ""){
+			else if( password.replace( blank_pattern, '' ) == "" ){
 			    alert("패스워드에 공백만 입력되었습니다");
 				$("#password").focus();
-			}else if(password == "")
+			}
+			else if(password == "")
 			{
 				alert("비밀번호를 입력해 주세요");
+				$("#password").focus();
+			}else if(password.length < 8)
+			{
+				alert("비밀번호 8자리 이상 입력해 주세요");
 				$("#password").focus();
 			}
 			else if(password_confirm == "")
 			{
 				alert("비밀번호 확인을 입력해 주세요");
 				$("#password_confirm").focus();
-			}else if(password.length < 8)
-			{
-				alert("비밀번호 8자리 이상 입력해 주세요");
-				$("#password").focus();
+			}else if(password_confirm.replace( blank_pattern, '' ) == ""){
+				alert("패스워드 확인에 공백만 입력되었습니다");
+				$("#password_confirm").focus();
 			}
 			else if(password!=password_confirm){
 				alert("비밀번호가 일치하지 않습니다.");
