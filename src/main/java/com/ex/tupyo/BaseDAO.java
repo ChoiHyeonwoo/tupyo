@@ -223,19 +223,27 @@ public class BaseDAO {
 
 		try{
 			connection = dataSource.getConnection();
-			String query = "select id, title, writer, is_duplicated, to_char(reg_date, 'yyyy-mm-dd') as reg_date , item_number, is_multi_check, writer_id from chw_tupyo";
+			String query = "select id, title, writer, is_duplicated, reg_date , item_number, is_multi_check, writer_id from (select id, title, writer, is_duplicated, to_char(reg_date, 'yyyy-mm-dd') as reg_date , item_number, is_multi_check, writer_id from chw_tupyo)";
 			
 			if (!(strs[0]==null)){
 				if(strs[0].equals("reg_date")){
-
+					
 					plus+=" where "+strs[0]+" like '%' || ? || '%'";
 					plus+=" order by reg_date desc";
 					query +=plus;
 
 					preparedStatement = connection.prepareStatement(query);					
 					preparedStatement.setString(1, strs[1]);
-				}else if(strs[0].equals("total")){
-					System.out.println("total "  + strs[1]);
+				}else if(strs[0].equals("total")){				
+					plus+=" where title like '%' || ? || '%'";
+					plus+=" or writer like '%' || ? || '%'";
+					plus+=" or reg_date like '%' || ? || '%'";
+					plus+=" order by reg_date desc";
+					query +=plus;
+					preparedStatement = connection.prepareStatement(query);
+					preparedStatement.setString(1, strs[1]);
+					preparedStatement.setString(2, strs[1]);
+					preparedStatement.setString(3, strs[1]);
 				}
 				else{
 					plus+=" where "+strs[0]+" like '%' || ? || '%'";

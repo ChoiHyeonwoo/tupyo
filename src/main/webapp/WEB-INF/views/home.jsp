@@ -29,7 +29,7 @@
 		window.onload = function(){
 			var id = '<%=id%>';
 
-			if(id==''){	
+			if(id==''){
 				$("#log_check").html("로그인");
 				$("#log_check").attr("href", "/tupyo/m_login");
 				$("#member_check").html("회원가입하기");
@@ -38,10 +38,8 @@
 				$("#log_view").hide();
 				$("#password_change").hide();
 			}
-		var search_option = "<c:out value="${search_option}"></c:out>"	
-		alert("ttt"+search_option+"ttt");
-			if (search_option!=null || search_option!=""){
-				alert("error");
+		var search_option = "<c:out value="${search_option}"></c:out>";	
+			if (search_option!=null && search_option!=""){
 				 $("select").val(search_option).attr("selected", "selected");
 			}
 		}
@@ -64,19 +62,23 @@
 			var option = $("#option").val();
 			var content = $("#content").val();
 
-			if (option==null){
+			if (option==""){
 				alert("검색할 항목을 설정해 주세요");
 				return;	
 			}
-			else if(content == ''){
-				alert("검색할 내용을 입력해 주세요");
-				return;	
-			}
+
 			var blank_pattern = /^\s+|\s+$/g;
 			if( content.replace( blank_pattern, '' ) == "" ){
-			    alert("항목에 공백만 입력되었습니다");
-			    return;
+				if(option=="total"){
+					document.tupyo.content.value="";
+				}else{
+					alert("항목을 입력해 주세요");
+				    return;
+				}
+
 			}
+
+	 	     
 			document.tupyo.submit();
 		}
 		function go_tupyo_execute(t_id){
@@ -126,8 +128,9 @@
 	</h1>
 	<form action="/tupyo" name="tupyo" id="tupyo" method="GET"> 
 		<select id="option" name="option" >
+		  <option value="" selected="selected">항목선택</option>
 		  <option value="total">전체검색</option>
-		  <option value="title" selected="selected">제목</option>
+		  <option value="title">제목</option>
 		  <option value="writer">작성자</option>
 		  <option value="reg_date">날짜</option>
 		</select>
