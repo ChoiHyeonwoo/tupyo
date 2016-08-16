@@ -39,10 +39,10 @@
 				$("#password_change").hide();
 			}
 		var search_option = "<c:out value="${search_option}"></c:out>"	
-			if (search_option!=null){
-
-				 $("select").val("${search_option}").attr("selected", "selected");
-
+		alert("ttt"+search_option+"ttt");
+			if (search_option!=null || search_option!=""){
+				alert("error");
+				 $("select").val(search_option).attr("selected", "selected");
 			}
 		}
 		function log_check(){
@@ -125,8 +125,9 @@
 		투표목록입니다.
 	</h1>
 	<form action="/tupyo" name="tupyo" id="tupyo" method="GET"> 
-		<select id="option" id="option" name="option"  onchange="select_value_modify(this.value)" >
-		  <option value="title">제목</option>
+		<select id="option" name="option" >
+		  <option value="total">전체검색</option>
+		  <option value="title" selected="selected">제목</option>
 		  <option value="writer">작성자</option>
 		  <option value="reg_date">날짜</option>
 		</select>

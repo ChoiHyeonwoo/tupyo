@@ -75,8 +75,7 @@ public class HomeController {
 			dao.upHit(result, t_id, result_arr[0], result_arr[1]);
 			
 			model.addAttribute("result", result);
-			System.out.println("result : " + result);
-			System.out.println("id : " + result);	
+
 		}
 		try {
 			response.getWriter().print(is_tupyo+",");
@@ -155,9 +154,10 @@ public class HomeController {
 		String is_duplicated = request.getParameter("duplicated");
 		String is_multi_check = request.getParameter("multi");
 		String item_number = request.getParameter("item_number");
+		String writer_id = request.getParameter("writer_id");
 		
 		BaseDAO dao = new BaseDAO();
-		dao.reg_poll(poll_title, writer, is_duplicated, item_number,is_multi_check, t_item_content);
+		dao.reg_poll(poll_title, writer, is_duplicated, item_number,is_multi_check, t_item_content, writer_id);
 			
 		
 		return "register";
@@ -170,17 +170,79 @@ public class HomeController {
 		String t_member = (String)session.getAttribute("id");
 		
 		String t_id = request.getParameter("t_id");
-		model.addAttribute("id", t_id);
+		model.addAttribute("t_id", t_id);
 		
 		BaseDAO dao = new BaseDAO();
 		
+		String writer_id = dao.get_t_reg_writer(t_id);
 		ArrayList<TupyoItemDTO> tidtos =  dao.tupyo_detail_view(t_id);
 		ArrayList<MyTupyoContentNumberDTO> mtcns = dao.tupyo_log_view(t_id, t_member);
+		
+		
 		model.addAttribute("t_title", tidtos.get(0).getT_title());
+		
+		model.addAttribute("writer_id", writer_id);		
 		model.addAttribute("tidtos", tidtos);
 
 		model.addAttribute("mtcns", mtcns);	
 		
 		return "t_result";
+	}
+	@RequestMapping(value = "/t_delete", method=RequestMethod.POST)
+	public void t_delete(HttpServletResponse response, HttpServletRequest request, Model model){
+		
+		model.addAttribute("request", request);
+		HttpSession session = request.getSession();
+
+		String t_id = request.getParameter("t_id");
+
+		BaseDAO dao = new BaseDAO();
+		
+		String delete_result = dao.tupyo_delete(t_id);
+
+		try {
+			response.getWriter().print(delete_result);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+	}
+	@RequestMapping(value = "/t_update")
+	public String t_update(HttpServletResponse response, HttpServletRequest request, Model model){
+		
+		model.addAttribute("request", request);
+		HttpSession session = request.getSession();
+
+		String t_id = request.getParameter("t_id");
+
+		BaseDAO dao = new BaseDAO();
+	
+		ArrayList<TupyoItemDTO> tidtos = dao.tupyo_detail_view(t_id);
+		TupyoDTO tdto = dao.get_tupyo_info(t_id);
+		
+		model.addAttribute("t_id", t_id);
+		model.addAttribute("tidtos", tidtos);
+		model.addAttribute("tdto", tdto);
+		
+		return "t_update";
+		
+	}
+// update_confirm controller
+	@RequestMapping(value = "/update_confirm", method=RequestMethod.POST)
+	public String update_confirm(@RequestParam(value = "item_arr[]", required = true) String[] t_item_content,HttpServletRequest request, Model model){
+		
+		model.addAttribute("request", request);
+		
+		String t_id = request.getParameter("t_id");
+		String poll_title = request.getParameter("title");
+		String is_duplicated = request.getParameter("duplicated");
+		String is_multi_check = request.getParameter("multi");
+		String item_number = request.getParameter("item_number");
+
+		
+		BaseDAO dao = new BaseDAO();
+		dao.update_poll(t_id, poll_title, is_duplicated, item_number, is_multi_check, t_item_content);
+			
+		return "redirect:/";
 	}
 }

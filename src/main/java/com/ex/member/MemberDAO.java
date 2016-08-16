@@ -233,49 +233,49 @@ public class MemberDAO extends BaseDAO{
 	}
 	public void login(String loglid){
 			
-			try{
-				//connection
-				connection = super.dataSource.getConnection();
-				connection.setAutoCommit(false);
-	
-				//preparedStatement
-				String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content, ip_address) values (chw_mlog_seq.nextval, ?, sysdate, ?, ?)";
-				
-				preparedStatement = connection.prepareStatement(query2);
-				preparedStatement.setString(1, loglid);
-				preparedStatement.setString(2, "Login");
-				preparedStatement.setString(3, getIpAddress());
+		try{
+			//connection
+			connection = super.dataSource.getConnection();
+			connection.setAutoCommit(false);
 
-				int rn = preparedStatement.executeUpdate();
-				
-				if(rn < 1){
-					connection.rollback();
+			//preparedStatement
+			String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content, ip_address) values (chw_mlog_seq.nextval, ?, sysdate, ?, ?)";
+			
+			preparedStatement = connection.prepareStatement(query2);
+			preparedStatement.setString(1, loglid);
+			preparedStatement.setString(2, "Login");
+			preparedStatement.setString(3, getIpAddress());
+
+			int rn = preparedStatement.executeUpdate();
+			
+			if(rn < 1){
+				connection.rollback();
+			}
+			connection.commit();
+			System.out.println(getIpAddress());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				// connection dispose
+				if(connection!=null){
+
+					connection.close();
 				}
-				connection.commit();
-				System.out.println(getIpAddress());
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+				
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			finally{
-				try{
-					// connection dispose
-					if(connection!=null){
-
-						connection.close();
-					}
-					if(preparedStatement!=null)
-						preparedStatement.close();
-					if(resultSet!=null)
-						resultSet.close();
-					
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-				
-			}
-			
 			
 		}
+		
+		
+	}
 	public void logout(String loglid){
 				
 		try{

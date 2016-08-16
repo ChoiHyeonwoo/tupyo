@@ -1,17 +1,17 @@
 <%@ page session="false" language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
+<% 
+	HttpSession session = request.getSession();
+	String id = (String)session.getAttribute("id");
+	String pk_id = (String)session.getAttribute("pk_id");
+	String name= (String)session.getAttribute("name");
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <script>
-	<% 
-	HttpSession session = request.getSession();
-	String id = (String)session.getAttribute("id");
-	String pk_id = (String)session.getAttribute("pk_id");
-	String name= (String)session.getAttribute("name");
-	%>
-	
+
 	var id ='<%=id%>';
 	
 	if(id=='null'){	
@@ -74,7 +74,7 @@
 			var duplicated = $(':radio[name="repoll"]:checked').val();
 			var multi = $(':radio[name="multi"]:checked').val();
 			var item_arr = new Array();
-			
+			var writer_id = "<%=id%>";
 			
 			if(poll_title==""){
 				alert("투표제목을 작성해주세요");
@@ -88,7 +88,9 @@
 			}
 			else if(item_arr == {}){
 				alert("항목을 입력해 주세요.");
-			}else if(item_arr != {}){
+			}
+			else{
+	
 				for (var i = 0; i < item_number; i++){	
 					if($("#items"+i+"").val()==""){
 						alert("항목을 입력해 주세요.");
@@ -100,8 +102,7 @@
 						item_arr.push($("#items"+i+"").val());
 					}
 				}
-			}
-			else{
+				
 				$.ajaxSettings.traditional = true;
 				
 				$.post("/tupyo/register_confirm", {
@@ -110,7 +111,8 @@
 					"duplicated": duplicated,
 					"multi": multi,
 					"item_number": item_number,
-					"item_arr[]": item_arr
+					"item_arr[]": item_arr,
+					"writer_id": writer_id
 				})
 				.done(function(msg){
 						alert("투표등록 완료.");

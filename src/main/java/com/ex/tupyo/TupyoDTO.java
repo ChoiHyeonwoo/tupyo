@@ -7,11 +7,18 @@ public class TupyoDTO {
 	int id;
 	String title;
 	String writer;
+	String writer_id;
 	String is_duplicated;
 	Date reg_date;
 	int item_number;
 	String is_multi_check;
 	
+	public String getWriter_id() {
+		return writer_id;
+	}
+	public void setWriter_id(String writer_id) {
+		this.writer_id = writer_id;
+	}
 	public int getItem_number() {
 		return item_number;
 	}
@@ -56,7 +63,7 @@ public class TupyoDTO {
 		this.writer = writer;
 	}
 
-	public TupyoDTO(int _id, String _title, String _writer, String _is_duplicated, Date _reg_date, int _item_number, String _is_multi_check) {
+	public TupyoDTO(int _id, String _title, String _writer, String _is_duplicated, Date _reg_date, int _item_number, String _is_multi_check, String _writer_id) {
 		// TODO Auto-generated constructor stub
 		this.id = _id;
 		this.title = _title;
@@ -64,7 +71,8 @@ public class TupyoDTO {
 		this.is_duplicated = _is_duplicated;
 		this.reg_date = _reg_date;
 		this.item_number = _item_number;
-		this.is_multi_check = _is_multi_check; 
+		this.is_multi_check = _is_multi_check;
+		this.writer_id = _writer_id;
 	}
 	
 	

@@ -12,7 +12,6 @@ public class TupyoItemDTO {
 		return t_title;
 	}
 
-
 	public void setT_title(String t_title) {
 		this.t_title = t_title;
 	}
