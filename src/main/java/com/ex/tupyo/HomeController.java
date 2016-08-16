@@ -36,7 +36,7 @@ public class HomeController {
 		String content = request.getParameter("content");
 
 		String arr[] ={option, content};
-		System.out.println(option+" " +content);
+
 		BaseDAO dao =  new BaseDAO();
 		ArrayList<TupyoDTO> tupyo_list = dao.titleView(arr);
 		if(tupyo_list.size()==0){

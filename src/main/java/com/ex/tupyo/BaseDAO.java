@@ -257,7 +257,7 @@ public class BaseDAO {
 				query +=plus;
 				preparedStatement = connection.prepareStatement(query);
 			}
-			System.out.println(query);
+
 			resultSet = preparedStatement.executeQuery();
 
 			while(resultSet.next()){

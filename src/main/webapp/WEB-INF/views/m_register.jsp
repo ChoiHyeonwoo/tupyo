@@ -30,8 +30,7 @@
 	</table>
 		<input type="button" onclick="member_reg()" value="회원가입" /> <input type="button" value="취소" onclick="cancel()"/>
 <script>
-
-	var id_duplicated_check = false;
+	var temp_check_id = "";
 	
 	function cancel(){
 		location.href = "/tupyo";		
@@ -41,7 +40,7 @@
 		var blank_pattern = /^\s+|\s+$/g;
 		
 		if(logid == 'null' || logid =='(null)'){
-			alert("부적절한 아이디 입니다.");
+			$("#id_check_result").html("사용불가한 아이디 입니다. 다른 아이디 입력해 주세요.");
 			$("#logid").focus();
 			return;
 		}else if(logid == ""){
@@ -51,11 +50,11 @@
 		}
 		else if(logid.length < 8)
 		{
-			alert("아이디는 8자리 이상 입력해 주세요");
+			$("#id_check_result").html("8자리 이상 입력해주세요");
 			$("#logid").focus();
 			return;
 		}else if( logid.replace( blank_pattern, '' ) == "" ){
-		    alert("아이디에 공백만 입력되었습니다");
+			$("#id_check_result").html("사용불가한 아이디 입니다. 다른 아이디 입력해 주세요.");
 		    $("#logid").focus();
 		    return;
 		}
@@ -71,12 +70,11 @@
 
 				if(result=="fail"){
 					$("#id_check_result").html("사용불가한 아이디 입니다. 다른 아이디 입력해 주세요.");
-					id_duplicated_check = false;
 					$("#logid").focus();
 				}
 				else{
 					$("#id_check_result").html("사용가능한 아이디 입니다.");
-					id_duplicated_check = true;
+					temp_check_id = logid;
 				}
 			}
 		});
@@ -102,7 +100,6 @@
 					if(result=="fail"){
 						id_check='fail';
 						$("#id_check_result").html("사용불가한 아이디 입니다. 다른 아이디 입력해 주세요.");
-						id_duplicated_check = false;
 						$("#logid").focus();
 						return;
 					}
@@ -129,7 +126,7 @@
 		//	    alert("아이디에 공백만 입력되었습니다");
 		//		$("#logid").focus();
 		//	}
-			else if(id_duplicated_check == false || id_check == 'fail' || $("#id_check_result").html()=="" || $("#id_check_result").html()=="사용불가한 아이디 입니다. 다른 아이디 입력해 주세요." || $("#id_check_result").html()=="중복체크 확인 바랍니다.")  {
+			else if(temp_check_id != id || id_check == 'fail' || $("#id_check_result").html()!="사용가능한 아이디 입니다." )  {
 				$("#id_check_result").html("중복체크 확인 바랍니다.");
 				$("#logid").focus();
 			}
@@ -139,8 +136,6 @@
 		//		$("#logid").focus();
 		//	}
 			else if(id_check == 'fail'){
-				return;
-			}else if(id_duplicated_check == false){
 				return;
 			}
 			else if( password.replace( blank_pattern, '' ) == "" || password_confirm.replace( blank_pattern, '' ) == ""){
