@@ -10,7 +10,7 @@ public class MemberSessionListener implements HttpSessionListener {
 		// TODO Auto-generated constructor stub
 	}
 	public void sessionCreated(HttpSessionEvent arg0) {
-
+		// 技记 积己矫 龋免
 		 
 	}
 
