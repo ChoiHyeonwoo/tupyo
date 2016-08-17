@@ -20,6 +20,13 @@
 				alert("로그인 후에 이용바랍니다.");
 				location.href = "/tupyo";
 			}
+		function expireSession()
+		{
+			alert("세션만료. 로그인을 다시 해주세요.");
+		  window.location = "/tupyo";
+		}
+		setTimeout('expireSession()', <%= request.getSession().getMaxInactiveInterval() * 1000 %>);
+		
 		 
 	</script>
 </head>

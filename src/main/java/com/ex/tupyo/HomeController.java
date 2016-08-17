@@ -27,7 +27,7 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/", method ={RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(value = "/", method ={ RequestMethod.GET, RequestMethod.POST})
 	public String home(/*@RequestBody MultiValueMap<String, String> params,*/ HttpServletResponse response, HttpServletRequest request, Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		model.addAttribute("request", request);
@@ -54,6 +54,7 @@ public class HomeController {
 		
 		return "home";
 	}
+	
 	@RequestMapping(value = "/result", method=RequestMethod.GET)
 	public void result(HttpServletResponse response,Model model, HttpServletRequest request){
 		
@@ -229,7 +230,7 @@ public class HomeController {
 	}
 // update_confirm controller
 	@RequestMapping(value = "/update_confirm", method=RequestMethod.POST)
-	public String update_confirm(@RequestParam(value = "item_arr[]", required = true) String[] t_item_content,HttpServletRequest request, Model model){
+	public String update_confirm(@RequestParam(value = "item_arr[]", required = true) String[] t_item_content, HttpServletRequest request, Model model){
 		
 		model.addAttribute("request", request);
 		

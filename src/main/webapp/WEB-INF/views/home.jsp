@@ -26,7 +26,8 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <script>
-		window.onload = function(){
+
+	window.onload = function(){
 			var id = '<%=id%>';
 
 			if(id==''){
@@ -43,7 +44,15 @@
 				 $("select").val(search_option).attr("selected", "selected");
 			}
 		}
-		function log_check(){
+	
+	function expireSession()
+	{
+		alert("세션만료. 로그인을 다시 해주세요.");
+	  window.location = "/tupyo";
+	}
+	setTimeout('expireSession()', <%= request.getSession().getMaxInactiveInterval() * 1000 %>);
+		
+	function log_check(){
 			var id = '<%=id%>';
 			
 			if(id==''){

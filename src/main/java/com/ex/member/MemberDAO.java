@@ -1,15 +1,11 @@
 package com.ex.member;
 
+import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.ex.tupyo.BaseDAO;
 
@@ -20,12 +16,15 @@ public class MemberDAO extends BaseDAO{
 	ResultSet resultSet;
 	
 	public String getIpAddress(){
-		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-        String ip = req.getHeader("X-FORWARDED-FOR");
-        if (ip == null)
-            ip = req.getRemoteAddr();
-         
-        return ip;
+		String ip = "";
+	    try{
+	       InetAddress local = InetAddress.getLocalHost();
+	       ip = local.getHostAddress();
+	      }catch(Exception e){
+	    	  e.printStackTrace();
+	      }
+	    return ip;
+		
 	}
 	
 
@@ -322,17 +321,14 @@ public class MemberDAO extends BaseDAO{
 	}
 	public void update_log(String loglid, String log_content){
 		
-		if(loglid.equals(null)){
-			return;
-		}
-		
+	
 		try{
 			//connection
 			connection = super.dataSource.getConnection();
 			connection.setAutoCommit(false);
 			//preparedStatement
 			String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content, ip_address) values (chw_mlog_seq.nextval, ?, sysdate, ?, ?)";
-			
+			System.out.println("ip 주소 : " + getIpAddress());
 			preparedStatement = connection.prepareStatement(query2);
 			preparedStatement.setString(1, loglid);
 			preparedStatement.setString(2, log_content);
@@ -528,7 +524,10 @@ public class MemberDAO extends BaseDAO{
 					log_content = "비밀번호 확인 성공";
 				}else if((resultSet.getString("log_content")).equals("password_update_fail")){
 					log_content = "비밀번호 변경 실패";
-				}else {
+				}else if((resultSet.getString("log_content")).equals("session expire")){
+					log_content = "세션 만료";
+				}
+				else {
 					log_content = "탈퇴 계정";
 				}
 				

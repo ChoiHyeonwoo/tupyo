@@ -15,6 +15,15 @@
     padding: 5px 10px;
   }
   </style>
+  <script>
+	function expireSession()
+	{
+		alert("세션만료. 로그인을 다시 해주세요.");
+	  window.location = "/tupyo";
+	}
+	setTimeout('expireSession()', <%= request.getSession().getMaxInactiveInterval() * 1000 %>);
+	
+  </script>
 </head>
 <body>
 

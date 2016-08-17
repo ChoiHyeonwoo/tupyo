@@ -10,16 +10,6 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<script>
-
-	var id ='<%=id%>';
-	
-	if(id=='null'){	
-		alert("로그인 먼저 하세요");
-		location.href = "/tupyo";
-}
-	
-</script>
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <title>Insert title here</title>
 </head>
@@ -51,6 +41,20 @@
 
 	<input type="button" value="투표등록" onclick="reg_poll()" />
 	<script>
+	var id ='<%=id%>';
+	
+	if(id=='null'){	
+		alert("로그인 먼저 하세요");
+		location.href = "/tupyo";
+	}
+	function expireSession()
+	{
+		alert("세션만료. 로그인을 다시 해주세요.");
+	  window.location = "/tupyo";
+	}
+	setTimeout('expireSession()', <%= request.getSession().getMaxInactiveInterval() * 1000 %>);
+	
+	
 		var item_number = 2;
 		function add_html(){
 			$("div").append('<input type="text" id="items'+item_number+'"/> <br id="br'+item_number+'" />');

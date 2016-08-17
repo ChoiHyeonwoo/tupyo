@@ -41,6 +41,14 @@
 
 	<input type="button" value="투표등록" onclick="reg_poll()" />
 <script>
+	function expireSession()
+	{
+		alert("세션만료. 로그인을 다시 해주세요.");
+	  window.location = "/tupyo";
+	}
+	setTimeout('expireSession()', <%= request.getSession().getMaxInactiveInterval() * 1000 %>);
+
+
 		var item_number = ${tdto.item_number};
 
 		$("#poll_title").val("${tdto.title}");

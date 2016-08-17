@@ -24,7 +24,13 @@
 		if("${result}" == "error"){
 			alert("다시 진행해 주시기 바랍니다.");
 		}
-		 
+		function expireSession()
+		{
+		  alert("세션만료. 로그인을 다시 해주세요.");
+		  window.location = "/tupyo";
+		}
+		setTimeout('expireSession()', <%= request.getSession().getMaxInactiveInterval() * 1000 %>);
+		
 	</script>
 </head>
 <body>
