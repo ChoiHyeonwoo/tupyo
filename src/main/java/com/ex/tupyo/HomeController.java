@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Handles requests for the application home page.
@@ -27,16 +28,17 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/", method ={ RequestMethod.GET, RequestMethod.POST})
-	public String home(/*@RequestBody MultiValueMap<String, String> params,*/ HttpServletResponse response, HttpServletRequest request, Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
+	@RequestMapping(value = "/")
+	public String home(HttpServletResponse response, HttpServletRequest request, Model model) {
+		//logger.info("Welcome home! The client locale is {}.", locale);
 		model.addAttribute("request", request);
-				
+		System.out.println("error");
 		String option = request.getParameter("option");
 		String content = request.getParameter("content");
+		
+		System.out.println(option + " " +  content);	
 
 		String arr[] ={option, content};
-
 		BaseDAO dao =  new BaseDAO();
 		ArrayList<TupyoDTO> tupyo_list = dao.titleView(arr);
 		if(tupyo_list.size()==0){
@@ -54,6 +56,7 @@ public class HomeController {
 		
 		return "home";
 	}
+	
 	
 	@RequestMapping(value = "/result", method=RequestMethod.GET)
 	public void result(HttpServletResponse response,Model model, HttpServletRequest request){

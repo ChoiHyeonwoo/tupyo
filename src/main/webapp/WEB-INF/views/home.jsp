@@ -86,9 +86,10 @@
 				}
 
 			}
-
+			alert(document.tupyo.content.value + " " + document.tupyo.option.value);		
 			document.tupyo.submit();
 		}
+		
 		function go_tupyo_execute(t_id){
 			
 			var id = '<%=id%>';
@@ -134,7 +135,8 @@
 	<h1>
 		투표목록입니다.
 	</h1>
-	<form action="/tupyo" name="tupyo" id="tupyo" method="GET"> 
+	<form action="" name="tupyo" id="tupyo" method="post"> 
+	
 		<select id="option" name="option" >
 		  <option value="" selected="selected">항목선택</option>
 		  <option value="total">전체검색</option>
