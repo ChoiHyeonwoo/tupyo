@@ -20,7 +20,8 @@ public class MemberSessionListener implements HttpSessionListener {
 		MemberDAO mdao = new MemberDAO();
 		HttpSession session = arg0.getSession();
 		String loglid = (String)session.getAttribute("id");
+		System.out.println("session destroy id : "+loglid);
 		mdao.update_log(loglid, "session expire");
-	} 
+	}
 
 }

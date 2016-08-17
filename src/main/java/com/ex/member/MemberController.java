@@ -122,7 +122,7 @@ public class MemberController {
 			request.getSession().setAttribute("pk_id", ""+mdtos.get(0).pk_mid);
 			request.getSession().setAttribute("id", mdtos.get(0).id);
 			request.getSession().setAttribute("name", mdtos.get(0).name);
-			request.getSession().setMaxInactiveInterval(3000);
+			request.getSession().setMaxInactiveInterval(1200);
 			model.addAttribute("mdtos", mdtos);
 	
 			try {
@@ -173,7 +173,7 @@ public class MemberController {
 		
 		request.getSession().setAttribute("id", id);
 		request.getSession().setAttribute("name", name);
-		request.getSession().setMaxInactiveInterval(300);
+		request.getSession().setMaxInactiveInterval(1200);
 
 		
 		return "redirect:/";

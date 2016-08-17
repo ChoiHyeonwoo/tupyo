@@ -328,7 +328,7 @@ public class MemberDAO extends BaseDAO{
 			connection.setAutoCommit(false);
 			//preparedStatement
 			String query2 = "insert into chw_mlog (pk_lid, mlogid, log_date, log_content, ip_address) values (chw_mlog_seq.nextval, ?, sysdate, ?, ?)";
-			System.out.println("ip аж╪р : " + getIpAddress());
+
 			preparedStatement = connection.prepareStatement(query2);
 			preparedStatement.setString(1, loglid);
 			preparedStatement.setString(2, log_content);
