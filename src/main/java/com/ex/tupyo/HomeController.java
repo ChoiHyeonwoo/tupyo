@@ -32,7 +32,7 @@ public class HomeController {
 	public String home(HttpServletResponse response, HttpServletRequest request, Model model) {
 		//logger.info("Welcome home! The client locale is {}.", locale);
 		model.addAttribute("request", request);
-		System.out.println("error");
+
 		String option = request.getParameter("option");
 		String content = request.getParameter("content");
 		
@@ -166,7 +166,7 @@ public class HomeController {
 		
 		return "register";
 	}
-	@RequestMapping(value = "/t_result", method=RequestMethod.GET)
+	@RequestMapping(value = "/t_result", method=RequestMethod.POST)
 	public String t_result(HttpServletRequest request, Model model){
 		
 		model.addAttribute("request", request);

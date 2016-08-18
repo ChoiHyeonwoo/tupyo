@@ -15,7 +15,7 @@ public class MemberDAO extends BaseDAO{
 	PreparedStatement preparedStatement;
 	ResultSet resultSet;
 	
-	public String getIpAddress(){
+	public static String getIpAddress(){
 		String ip = "";
 	    try{
 	       InetAddress local = InetAddress.getLocalHost();

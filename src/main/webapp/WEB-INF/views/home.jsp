@@ -86,7 +86,6 @@
 				}
 
 			}
-			alert(document.tupyo.content.value + " " + document.tupyo.option.value);		
 			document.tupyo.submit();
 		}
 		
