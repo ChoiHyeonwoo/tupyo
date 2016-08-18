@@ -80,21 +80,28 @@ public class MemberDAO extends BaseDAO{
 	}
 	
 	// register
-	public String register(String id, String password, String name){
+	public void register(String id, String password, String name, String reg_person){
 		String result = check_id(id);
-		if(result.equals("fail"))
-			return "error";
+
 		try{			
 			//connection
 			connection = super.dataSource.getConnection();
 			connection.setAutoCommit(false);
-			String query = "insert into chw_member (id, password, name, curr_user, reg_date, drop_date, pk_mid ) values (?, ?, ?, 'y', sysdate, ?, chw_member_seq.nextval)";
+			String query = "insert into chw_member (id, password, name, curr_user, reg_date, drop_date, pk_mid, grade, reg_person ) values (?, ?, ?, 'y', sysdate, ?, chw_member_seq.nextval, ?, ?)";
 			//preparedStatement
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, id);
 			preparedStatement.setString(2, password);
 			preparedStatement.setString(3, name);
 			preparedStatement.setString(4, null);
+			preparedStatement.setInt(5, 9);
+			if(reg_person ==null){
+				preparedStatement.setString(6, id);
+			}else{
+				preparedStatement.setString(6, reg_person);
+			}
+			
+			
 			int rn = preparedStatement.executeUpdate();
 			if(rn <1){
 				connection.rollback();
@@ -121,7 +128,6 @@ public class MemberDAO extends BaseDAO{
 			}
 			
 		}
-		return result;
 		
 	}
 	
@@ -189,15 +195,17 @@ public class MemberDAO extends BaseDAO{
 					Date reg_date = resultSet.getDate("reg_date");
 					Date drop_date = resultSet.getDate("drop_date");
 					int pk_mid = resultSet.getInt("pk_mid");
+					int grade = resultSet.getInt("grade");
+					String reg_person = resultSet.getString("reg_person");
 					System.out.println(curr_user+"spacecheck");
 					login(id);
 					
-					MemberDTO mdto = new MemberDTO(id, password, name, curr_user, reg_date, drop_date, pk_mid);
+					MemberDTO mdto = new MemberDTO(id, password, name, curr_user, reg_date, drop_date, pk_mid, grade, reg_person);
 
 					mdtos.add(mdto);
 					
 				}else if(resultSet.getString("curr_user").equals("n  ")){
-					MemberDTO mdto = new MemberDTO(null, null, null, null, null, null, -1);
+					MemberDTO mdto = new MemberDTO(null, null, null, null, null, null, -1, -1, null);
 					mdtos.add(mdto);
 					update_log(logid, "login_fail");
 				}else{
@@ -526,6 +534,12 @@ public class MemberDAO extends BaseDAO{
 					log_content = "비밀번호 변경 실패";
 				}else if((resultSet.getString("log_content")).equals("session expire")){
 					log_content = "세션 만료";
+				}else if((resultSet.getString("log_content")).equals("admin_info_update")){
+					log_content = "관리자 정보 수정";
+				}else if((resultSet.getString("log_content")).equals("admin_login_fail")){
+					log_content = "관리자 로그인 실패";
+				}else if((resultSet.getString("log_content")).equals("admin_login_success")){
+					log_content = "관리자 로그인 성공";
 				}
 				else {
 					log_content = "탈퇴 계정";

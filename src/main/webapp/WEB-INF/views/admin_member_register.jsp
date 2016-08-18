@@ -1,34 +1,50 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="EUC-KR"%>
+<%@ page session="false" language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<% 
+	HttpSession session = request.getSession();
+	String pk_id = (String)session.getAttribute("pk_id");
+	String id = (String)session.getAttribute("id");
+	String name = (String)session.getAttribute("name");
+	int grade = ((Integer)session.getAttribute("grade")).intValue();
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+<script>
+	function expireSession()
+	{
+		alert("ì„¸ì…˜ë§Œë£Œ. ë¡œê·¸ì¸ì„ ë‹¤ì‹œ í•´ì£¼ì„¸ìš”.");
+	  	window.location = "/tupyo/admin_login";
+	}
+	setTimeout('expireSession()', <%= request.getSession().getMaxInactiveInterval() * 1000 %>);
+</script>
 </head>
 <body>
-	<table>
+<table>
 		<tr>
-			<td>¾ÆÀÌµğ </td>
+			<td>ì•„ì´ë”” </td>
 			<td><input type = "text" id="logid"/></td>
-			<td><input type="button" value="Áßº¹È®ÀÎ" onclick="id_check()" /></td>
+			<td><input type="button" value="ì¤‘ë³µí™•ì¸" onclick="id_check()" /></td>
 			<td><a id="id_check_result"></a></td>
 		</tr>
 		<tr>
-			<td>ºñ¹Ğ¹øÈ£ </td>
+			<td>ë¹„ë°€ë²ˆí˜¸ </td>
 			<td><input type = "password" id="password"/></td>
 		</tr>
 		<tr>
-			<td>ºñ¹Ğ¹øÈ£ È®ÀÎ</td>
+			<td>ë¹„ë°€ë²ˆí˜¸ í™•ì¸</td>
 			<td><input type = "password" id="password_confirm"/></td>
 		</tr>
 		<tr>
-			<td>ÀÌ¸§</td>
+			<td>ì´ë¦„</td>
 			<td><input type = "text" id="name"/></td> 
 		</tr>
 	</table>
-		<input type="button" onclick="member_reg()" value="È¸¿ø°¡ÀÔ" /> <input type="button" value="Ãë¼Ò" onclick="cancel()"/>
+		<input type="button" onclick="member_reg()" value="íšŒì›ê°€ì…" /> <input type="button" value="ì·¨ì†Œ" onclick="cancel()"/>
 <script>
 	var temp_check_id = "";
 	
@@ -40,23 +56,23 @@
 		var blank_pattern = /^\s+|\s+$/g;
 		
 		if(logid == 'null' || logid =='(null)'){
-			$("#id_check_result").html("»ç¿ëºÒ°¡ÇÑ ¾ÆÀÌµğ ÀÔ´Ï´Ù. ´Ù¸¥ ¾ÆÀÌµğ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+			$("#id_check_result").html("ì‚¬ìš©ë¶ˆê°€í•œ ì•„ì´ë”” ì…ë‹ˆë‹¤. ë‹¤ë¥¸ ì•„ì´ë”” ì…ë ¥í•´ ì£¼ì„¸ìš”.");
 			$("#logid").val("");
 			$("#logid").focus();
 			return;
 		}else if(logid == ""){
-			$("#id_check_result").html("¾ÆÀÌµğ¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+			$("#id_check_result").html("ì•„ì´ë””ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
 			$("#logid").focus();
 			return;
 		}
 		else if(logid.length < 8)
 		{
-			$("#id_check_result").html("8ÀÚ¸® ÀÌ»ó ÀÔ·ÂÇØÁÖ¼¼¿ä");
+			$("#id_check_result").html("8ìë¦¬ ì´ìƒ ì…ë ¥í•´ì£¼ì„¸ìš”");
 			$("#logid").val("");
 			$("#logid").focus();
 			return;
 		}else if( logid.replace( blank_pattern, '' ) == "" ){
-			$("#id_check_result").html("°ø¹é¸¸ ÀÔ·ÂµÇ¾ú½À´Ï´Ù.");
+			$("#id_check_result").html("ê³µë°±ë§Œ ì…ë ¥ë˜ì—ˆìŠµë‹ˆë‹¤.");
 			$("#logid").val("");
 		    $("#logid").focus();
 		    return;
@@ -72,12 +88,12 @@
 			success: function(result){
 
 				if(result=="fail"){
-					$("#id_check_result").html("»ç¿ëºÒ°¡ÇÑ ¾ÆÀÌµğ ÀÔ´Ï´Ù. ´Ù¸¥ ¾ÆÀÌµğ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+					$("#id_check_result").html("ì‚¬ìš©ë¶ˆê°€í•œ ì•„ì´ë”” ì…ë‹ˆë‹¤. ë‹¤ë¥¸ ì•„ì´ë”” ì…ë ¥í•´ ì£¼ì„¸ìš”.");
 					$("#logid").val("");
 					$("#logid").focus();
 				}
 				else{
-					$("#id_check_result").html("»ç¿ë°¡´ÉÇÑ ¾ÆÀÌµğ ÀÔ´Ï´Ù.");
+					$("#id_check_result").html("ì‚¬ìš©ê°€ëŠ¥í•œ ì•„ì´ë”” ì…ë‹ˆë‹¤.");
 					temp_check_id = logid;
 				}
 			}
@@ -88,7 +104,7 @@
 			var blank_pattern = /^\s+|\s+$/g;
 			var id = $("#logid").val();
 			if(id == 'null' || id =='(null)'){
-				alert("ºÎÀûÀıÇÑ ¾ÆÀÌµğ ÀÔ´Ï´Ù.");
+				alert("ë¶€ì ì ˆí•œ ì•„ì´ë”” ì…ë‹ˆë‹¤.");
 				$("#logid").val("");
 				$("#logid").focus();
 				return;
@@ -104,7 +120,7 @@
 				success: function(result){
 					if(result=="fail"){
 						id_check='fail';
-						$("#id_check_result").html("»ç¿ëºÒ°¡ÇÑ ¾ÆÀÌµğ ÀÔ´Ï´Ù. ´Ù¸¥ ¾ÆÀÌµğ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+						$("#id_check_result").html("ì‚¬ìš©ë¶ˆê°€í•œ ì•„ì´ë”” ì…ë‹ˆë‹¤. ë‹¤ë¥¸ ì•„ì´ë”” ì…ë ¥í•´ ì£¼ì„¸ìš”.");
 						$("#logid").val("");
 						$("#logid").focus();
 						return;
@@ -116,75 +132,66 @@
 			var password_confirm = $("#password_confirm").val();
 			var name = $("#name").val();
 			if(password == 'null' || password =='(null)'){
+				alert("ë¶€ì ì ˆí•œ ë¹„ë°€ë²ˆí˜¸ ì…ë‹ˆë‹¤.");
 				$("#password").val("");
-				alert("ºÎÀûÀıÇÑ ºñ¹Ğ¹øÈ£ ÀÔ´Ï´Ù.");
+				$("#password_confirm").val("");
 				$("#password").focus();
 				return;
 			}if(name == 'null' || name =='(null)'){
-				
-				alert("ºÎÀûÀıÇÑ ÀÌ¸§ ÀÔ´Ï´Ù.");
-				$("#name").val("");
+				alert("ë¶€ì ì ˆí•œ ì´ë¦„ ì…ë‹ˆë‹¤.");
+				$("#name").val("");	
 				$("#name").focus();
+
 				return;
 			}
+			var reg_person = "<%= id %>";
+			
 
-		//	if(id == ""){
-			//	alert("¾ÆÀÌµğ¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä");
-		//		$("#logid").focus();
-		//	}else if( id.replace( blank_pattern, '' ) == "" ){
-		//	    alert("¾ÆÀÌµğ¿¡ °ø¹é¸¸ ÀÔ·ÂµÇ¾ú½À´Ï´Ù");
-		//		$("#logid").focus();
-		//	}
-			else if(temp_check_id != id || id_check == 'fail' || $("#id_check_result").html()!="»ç¿ë°¡´ÉÇÑ ¾ÆÀÌµğ ÀÔ´Ï´Ù." )  {
-				$("#id_check_result").html("Áßº¹Ã¼Å© È®ÀÎ ¹Ù¶ø´Ï´Ù.");
+			if(temp_check_id != id || id_check == 'fail' || $("#id_check_result").html()!="ì‚¬ìš©ê°€ëŠ¥í•œ ì•„ì´ë”” ì…ë‹ˆë‹¤." )  {
+				$("#id_check_result").html("ì¤‘ë³µì²´í¬ í™•ì¸ ë°”ëë‹ˆë‹¤.");
 				$("#logid").focus();
 			}
-		//	else if(id.length < 8)
-		//	{
-		//		alert("¾ÆÀÌµğ´Â 8ÀÚ¸® ÀÌ»ó ÀÔ·ÂÇØ ÁÖ¼¼¿ä");
-		//		$("#logid").focus();
-		//	}
 			else if(id_check == 'fail'){
 				return;
 			}
+			else if(password == "")
+			{
+				alert("ë¹„ë°€ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”");
+				$("#password").focus();
+			}
 			else if( password.replace( blank_pattern, '' ) == "" ){
-			    alert("ÆĞ½º¿öµå¿¡ °ø¹é¸¸ ÀÔ·ÂµÇ¾ú½À´Ï´Ù");
+			    alert("ë¹„ë°€ë²ˆí˜¸ì— ê³µë°±ë§Œ ì…ë ¥ë˜ì—ˆìŠµë‹ˆë‹¤");
 			    $("#password").val("");
 				$("#password").focus();
 			}
-			else if(password == "")
+			else if(password.length < 8)
 			{
-				alert("ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä");
-				$("#password").focus();
-			}else if(password.length < 8)
-			{
-				alert("ºñ¹Ğ¹øÈ£ 8ÀÚ¸® ÀÌ»ó ÀÔ·ÂÇØ ÁÖ¼¼¿ä");
-				$("#password").val("");
+				alert("ë¹„ë°€ë²ˆí˜¸ 8ìë¦¬ ì´ìƒ ì…ë ¥í•´ ì£¼ì„¸ìš”");
+			    $("#password").val("");
 				$("#password").focus();
 			}
 			else if(password_confirm == "")
 			{
-				alert("ºñ¹Ğ¹øÈ£ È®ÀÎÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä");
+				alert("ë¹„ë°€ë²ˆí˜¸ í™•ì¸ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”");
 				$("#password_confirm").focus();
 			}else if(password_confirm.replace( blank_pattern, '' ) == ""){
-				alert("ÆĞ½º¿öµå È®ÀÎ¿¡ °ø¹é¸¸ ÀÔ·ÂµÇ¾ú½À´Ï´Ù");
-				$("#password").val("");
+				alert("ë¹„ë°€ë²ˆí˜¸ í™•ì¸ì— ê³µë°±ë§Œ ì…ë ¥ë˜ì—ˆìŠµë‹ˆë‹¤");
+			    $("#password_confirm").val("");
 				$("#password_confirm").focus();
 			}
 			else if(password!=password_confirm){
-				alert("ºñ¹Ğ¹øÈ£°¡ ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù.");
-				$("#password").val("");
-				$("#password_confirm").val("");
+				alert("ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
+				 $("#password").val("");
+				 $("#password_confirm").val("");
 				$("#password").focus();
 			}
 			else if(name == ""){
-				alert("ÀÌ¸§À» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
-				$("#name").val("");
+				alert("ì´ë¦„ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
 				$("#name").focus();
 			}
 			
 			else if( name.replace( blank_pattern, '' ) == "" ){
-			    alert("ÀÌ¸§¿¡ °ø¹é¸¸ ÀÔ·ÂµÇ¾ú½À´Ï´Ù");
+			    alert("ì´ë¦„ì— ê³µë°±ë§Œ ì…ë ¥ë˜ì—ˆìŠµë‹ˆë‹¤");
 			    $("#name").val("");
 			    $("#name").focus();
 			}
@@ -192,11 +199,12 @@
 				$.post("/tupyo/m_confirm", {
 					id: id,
 					password: password,
-					name: name
+					name: name,
+					reg_person: reg_person
 				})
 				.done(function(msg){
-						alert("°¡ÀÔ¿Ï·á. ·Î±×ÀÎ ÇØÁÖ½Ã±â ¹Ù¶ø´Ï´Ù.");
-						location.href = "/tupyo";
+						alert("ê°€ì…ì™„ë£Œ. í™ˆìœ¼ë¡œ ëŒì•„ê°‘ë‹ˆë‹¤");
+						location.href="/tupyo/admin_main";
 				})
 			}
 			

@@ -82,8 +82,11 @@
 			
 			if(poll_title==""){
 				alert("투표제목을 작성해주세요");
+				$("#poll_title").focus();
 			}else if( poll_title.replace( blank_pattern, '' ) == "" ){
 			    alert("투표제목에 공백만 입력되었습니다");
+			    $("#poll_title").val("");
+			    $("#poll_title").focus();
 			}
 			else if(duplicated ==""){
 				alert("중복여부를 선택해주세요");
@@ -92,15 +95,19 @@
 			}
 			else if(item_arr == {}){
 				alert("항목을 입력해 주세요.");
+				$("#items0").focus();
 			}
 			else{
 	
 				for (var i = 0; i < item_number; i++){	
 					if($("#items"+i+"").val()==""){
 						alert("항목을 입력해 주세요.");
+						$("#items"+i+"").focus();
 						return;
 					}else if( $("#items"+i+"").val().replace( blank_pattern, '' ) == "" ){
 					    alert("투표항목에 공백만 입력되었습니다");
+					    $("#items"+i+"").val("");
+					    $("#items"+i+"").focus();
 					    return;
 					}else{
 						item_arr.push($("#items"+i+"").val());

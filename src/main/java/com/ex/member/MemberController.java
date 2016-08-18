@@ -29,11 +29,10 @@ public class MemberController {
 		String id = request.getParameter("id");
 		String password = request.getParameter("password");
 		String name = request.getParameter("name");
-
+		String reg_person = request.getParameter("reg_person");
 		MemberDAO mdao = new MemberDAO();
-		String confirm = mdao.register(id, password, name);
-		
-		model.addAttribute("confirm", confirm);
+		mdao.register(id, password, name, reg_person);
+
 		
 		return "m_confirm";
 	
@@ -122,6 +121,7 @@ public class MemberController {
 			request.getSession().setAttribute("pk_id", ""+mdtos.get(0).pk_mid);
 			request.getSession().setAttribute("id", mdtos.get(0).id);
 			request.getSession().setAttribute("name", mdtos.get(0).name);
+			request.getSession().setAttribute("grade", mdtos.get(0).grade);
 			request.getSession().setMaxInactiveInterval(1200);
 			model.addAttribute("mdtos", mdtos);
 	

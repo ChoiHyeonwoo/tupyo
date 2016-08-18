@@ -6,7 +6,7 @@
 	String id = (String)session.getAttribute("id");
 	String pk_id = (String)session.getAttribute("pk_id");
 	String name= (String)session.getAttribute("name");
-
+	int grade = ((Integer)session.getAttribute("grade")).intValue();
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -16,6 +16,7 @@
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>	
 <script>
 	var id = '<%=id%>';
+	var grade = '<%=grade%>'
 	if (id == 'null')
 		{
 			alert("로그인 후에 이용바랍니다.");
@@ -30,7 +31,7 @@
 	
 	
  	function tupyo_delete(){
- 		if(id != '${writer_id}'){
+ 		if(id != '${writer_id}' && grade =='9'){
  			alert("투표 등록자만 삭제할 수 있습니다.");
  			return;
  		}
@@ -51,7 +52,7 @@
  	}
  	function tupyo_update(){
  		var t_id = '${t_id}';
- 		if(id != '${writer_id}'){
+ 		if(id != '${writer_id}' && grade =='9'){
  			alert("투표 등록자만 수정할 수 있습니다.");
  			return;
  		}
@@ -98,7 +99,7 @@
 	<c:forEach items="${tidtos}" var="dto">
 <tr>
 	<td>${dto.t_item_content}</td>
-	<td>${dto.t_item_selected}</td>
+	<td style="text-align:center">${dto.t_item_selected}</td>
 </tr>
 	</c:forEach>
 
@@ -121,7 +122,7 @@
 	<c:forEach items="${mtcns}" var="dto">
 	<tr>
 		<td>${dto.select_content}</td>
-		<td>${dto.select_num}</td>
+		<td style="text-align:center">${dto.select_num}</td>
 	</tr>
 	</c:forEach>
 

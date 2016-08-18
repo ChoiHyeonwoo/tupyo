@@ -11,6 +11,10 @@
 		}
 		String pk_id = (String)session.getAttribute("pk_id");
 		String name= (String)session.getAttribute("name");
+		int grade = 9;
+		if(session.getAttribute("grade")!=null){
+			 grade = ((Integer)session.getAttribute("grade")).intValue();
+		}
 	%>
 <html>
 <head>
@@ -78,9 +82,7 @@
 
 			var blank_pattern = /^\s+|\s+$/g;
 			if( content.replace( blank_pattern, '' ) == "" ){
-				if(option=="total"){
-					document.tupyo.content.value="";
-				}else{
+				if(option!="total"){
 					alert("항목을 입력해 주세요");
 				    return;
 				}
@@ -121,9 +123,13 @@
 		function go_tupyo_register(){
 			
 			var id = '<%=id%>';
-			
+			var grade = '<%=grade%>'
 			if(id==''){
 				alert("로그인 후에 진행 바랍니다");
+				return;
+			}
+			if(grade == '9'){
+				alert("투표등록 권한이 없습니다.");
 				return;
 			}
 			location.href="/tupyo/register";
@@ -137,8 +143,7 @@
 	<form action="" name="tupyo" id="tupyo" method="post"> 
 	
 		<select id="option" name="option" >
-		  <option value="" selected="selected">항목선택</option>
-		  <option value="total">전체검색</option>
+		  <option value="total" selected="selected">전체검색</option>
 		  <option value="title">제목</option>
 		  <option value="writer">작성자</option>
 		  <option value="reg_date">날짜</option>

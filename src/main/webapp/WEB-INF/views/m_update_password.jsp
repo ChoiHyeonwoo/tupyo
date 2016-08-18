@@ -5,7 +5,7 @@
 	String id = (String)session.getAttribute("id");
 	String pk_id = (String)session.getAttribute("pk_id");
 	String name= (String)session.getAttribute("name");
-	
+	int grade = ((Integer)session.getAttribute("grade")).intValue();
 	
 %>	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">

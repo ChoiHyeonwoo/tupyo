@@ -11,7 +11,7 @@
 		String id = (String)session.getAttribute("id");
 		String pk_id = (String)session.getAttribute("pk_id");
 		String name= (String)session.getAttribute("name");
-
+		int grade = ((Integer)session.getAttribute("grade")).intValue();
 
 	%>
 	<script>
