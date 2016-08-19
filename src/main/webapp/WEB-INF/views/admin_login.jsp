@@ -1,5 +1,18 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page session="false" language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% 
+	HttpSession session = request.getSession();
+	String id = (String)session.getAttribute("id");
+	if("".equals(id) || id == null){
+		id = "";
+	}
+	String pk_id = (String)session.getAttribute("pk_id");
+	String name= (String)session.getAttribute("name");
+	int grade = 9;
+	if(session.getAttribute("grade")!=null){
+		 grade = ((Integer)session.getAttribute("grade")).intValue();
+	}
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -13,16 +26,26 @@
 	<tr>
 		<td>아이디</td>
 		<td><input type= "text" id="logid" /></td>
-		<td colspan="2"><input type="button"  onclick="formCHK()" value="로그인" /></td>
 	</tr>
 	<tr>
 		<td>패스워드</td>
 		<td><input type= "password" id="logpw" /></td>
 	</tr>
+	<tr>
+		<td colspan="2"><input type="button"  onclick="formCHK()" value="로그인" /></td>
+	</tr>
 </table>
 
 </body>
 <script>
+	var id = '<%=id%>';
+	var grade = '<%=grade%>';
+	
+	if(id !=''&& grade !='9'){
+		alert("관리자 인증 되었습니다.");
+		location.href = "/tupyo/admin_main";
+	}
+	
 	function formCHK() {
 		var id = $("#logid").val();
 		var password = $("#logpw").val();

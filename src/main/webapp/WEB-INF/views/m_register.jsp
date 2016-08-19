@@ -147,16 +147,17 @@
 			else if(id_check == 'fail'){
 				return;
 			}
-			else if( password.replace( blank_pattern, '' ) == "" ){
-			    alert("패스워드에 공백만 입력되었습니다");
-			    $("#password").val("");
-				$("#password").focus();
-			}
 			else if(password == "")
 			{
 				alert("비밀번호를 입력해 주세요");
 				$("#password").focus();
-			}else if(password.length < 8)
+			}
+			else if( password.replace( blank_pattern, '' ) == "" ){
+			    alert("비밀번호에 공백만 입력되었습니다");
+			    $("#password").val("");
+				$("#password").focus();
+			}
+			else if(password.length < 8)
 			{
 				alert("비밀번호 8자리 이상 입력해 주세요");
 				$("#password").val("");

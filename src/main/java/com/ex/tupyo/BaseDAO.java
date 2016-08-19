@@ -857,22 +857,23 @@ public class BaseDAO {
 			}
 
 		}
-	public void update_poll(String t_id, String title, String is_duplicated, String item_number, String is_multi_check, String[] t_item_content){
+	public void update_poll(String t_id, String title,String is_duplicated, String item_number, String is_multi_check, String[] t_item_content,  String modify_name){
 		String query ="";
 		
 		try{
 			connection = dataSource.getConnection();
 			connection.setAutoCommit(false); // 트랜잭션을 사용하기 위해서 AutoCommit을 정지한다 
 							
-			query = "update chw_tupyo set title = ?, is_duplicated= ?, reg_date = sysdate, item_number = ?, is_multi_check = ? where id = ?";
+			query = "update chw_tupyo set title = ?, is_duplicated= ?,  item_number = ?, is_multi_check = ?, modify_name = ?, modify_date = sysdate where id = ?";
 			
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, title);
 			preparedStatement.setString(2, is_duplicated);
 			preparedStatement.setInt(3, Integer.parseInt(item_number));
 			preparedStatement.setString(4, is_multi_check);
-			preparedStatement.setInt(5, Integer.parseInt(t_id));
-										
+			preparedStatement.setString(5, modify_name);
+			preparedStatement.setInt(6, Integer.parseInt(t_id));
+		
 			int rn = preparedStatement.executeUpdate();	
 			if(rn < 1){
 				connection.rollback(); //에러발생시 rollback 처리

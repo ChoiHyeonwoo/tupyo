@@ -32,7 +32,7 @@
 	
  	function tupyo_delete(){
  		if(id != '${writer_id}' && grade =='9'){
- 			alert("투표 등록자만 삭제할 수 있습니다.");
+ 			alert("삭제 권한이 없습니다.");
  			return;
  		}
  		
@@ -53,7 +53,7 @@
  	function tupyo_update(){
  		var t_id = '${t_id}';
  		if(id != '${writer_id}' && grade =='9'){
- 			alert("투표 등록자만 수정할 수 있습니다.");
+ 			alert("수정 권한이 없습니다.");
  			return;
  		}
  		
@@ -66,15 +66,7 @@
  
  	     form.append(idx);
  	     form.submit();
- 		
-//        $.get("/tupyo/t_update", {
 
-  //          	t_id: t_id,
- //        
-  //         success: function() {
-  //         	location.href="/tupyo/t_update"
-  //         }
- //      });
  	}
 </script>
 <style>

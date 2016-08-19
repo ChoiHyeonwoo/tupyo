@@ -215,7 +215,7 @@ public class HomeController {
 	public String t_update(HttpServletResponse response, HttpServletRequest request, Model model){
 		
 		model.addAttribute("request", request);
-		HttpSession session = request.getSession();
+		
 
 		String t_id = request.getParameter("t_id");
 
@@ -236,6 +236,8 @@ public class HomeController {
 	public String update_confirm(@RequestParam(value = "item_arr[]", required = true) String[] t_item_content, HttpServletRequest request, Model model){
 		
 		model.addAttribute("request", request);
+		HttpSession session = request.getSession();
+		String modify_name = (String)session.getAttribute("name");
 		
 		String t_id = request.getParameter("t_id");
 		String poll_title = request.getParameter("title");
@@ -245,7 +247,7 @@ public class HomeController {
 
 		
 		BaseDAO dao = new BaseDAO();
-		dao.update_poll(t_id, poll_title, is_duplicated, item_number, is_multi_check, t_item_content);
+		dao.update_poll(t_id, poll_title, is_duplicated, item_number, is_multi_check, t_item_content,  modify_name);
 			
 		return "redirect:/";
 	}

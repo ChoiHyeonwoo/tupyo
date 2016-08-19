@@ -123,13 +123,8 @@
 		function go_tupyo_register(){
 			
 			var id = '<%=id%>';
-			var grade = '<%=grade%>'
 			if(id==''){
 				alert("로그인 후에 진행 바랍니다");
-				return;
-			}
-			if(grade == '9'){
-				alert("투표등록 권한이 없습니다.");
 				return;
 			}
 			location.href="/tupyo/register";
