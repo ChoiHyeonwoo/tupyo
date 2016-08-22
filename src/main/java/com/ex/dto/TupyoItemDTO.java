@@ -1,4 +1,4 @@
-package com.ex.tupyo;
+package com.ex.dto;
 
 public class TupyoItemDTO {
 	

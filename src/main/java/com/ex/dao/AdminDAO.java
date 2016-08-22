@@ -6,8 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import com.ex.tupyo.MemberDTO;
-import com.ex.tupyo.MemberLogDTO;
+import com.ex.dto.MemberDTO;
+import com.ex.dto.MemberLogDTO;
 
 public class AdminDAO extends BaseDAO {
 

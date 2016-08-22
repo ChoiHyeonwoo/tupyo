@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ex.dao.AdminDAO;
 import com.ex.dao.MemberDAO;
-import com.ex.tupyo.MemberDTO;
-import com.ex.tupyo.MemberLogDTO;
+import com.ex.dto.MemberDTO;
+import com.ex.dto.MemberLogDTO;
 
 
 

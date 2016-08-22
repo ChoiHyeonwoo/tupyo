@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.ex.dao.MemberDAO;
-import com.ex.tupyo.MemberDTO;
-import com.ex.tupyo.MemberLogDTO;
+import com.ex.dto.MemberDTO;
+import com.ex.dto.MemberLogDTO;
 
 @Controller
 public class MemberController {

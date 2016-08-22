@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ex.dao.BaseDAO;
-import com.ex.tupyo.MyTupyoContentNumberDTO;
-import com.ex.tupyo.TupyoDTO;
-import com.ex.tupyo.TupyoItemDTO;
-import com.ex.tupyo.TupyoMultiChecked;
+import com.ex.dto.MyTupyoContentNumberDTO;
+import com.ex.dto.TupyoDTO;
+import com.ex.dto.TupyoItemDTO;
+import com.ex.dto.TupyoMultiChecked;
 
 /**
  * Handles requests for the application home page.

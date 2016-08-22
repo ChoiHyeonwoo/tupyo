@@ -12,10 +12,10 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-import com.ex.tupyo.MyTupyoContentNumberDTO;
-import com.ex.tupyo.TupyoDTO;
-import com.ex.tupyo.TupyoItemDTO;
-import com.ex.tupyo.TupyoMultiChecked;
+import com.ex.dto.MyTupyoContentNumberDTO;
+import com.ex.dto.TupyoDTO;
+import com.ex.dto.TupyoItemDTO;
+import com.ex.dto.TupyoMultiChecked;
 
 public class BaseDAO {
 
