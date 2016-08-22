@@ -13,9 +13,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <title>Insert title here</title>
-
 <script>
-	
 	var grade = "<%=grade %>";
 	function expireSession()
 	{
@@ -45,8 +43,6 @@
 		var id = "${mdto.id}";
 		
 		var name = $("#name").val();
-		var password = $("#password").val();
-		var password_confirm = $("#password_confirm").val();
 
 		var authority = $("#authority").val();
 		
@@ -64,38 +60,11 @@
 		    alert("이름에 공백만 입력되었습니다");
 		    $("#name").focus();
 		}
-		else if(password ==""){
-			alert("비밀번호를 입력해 주세요.");
-			$("#password").focus();
-		}
-		else if(password.replace( blank_pattern, '' ) == "" ){
-			alert("비밀번호에 공백만 입력 되었습니다.");
-			$("#password").val("");
-			$("#password").focus();
-		}else if(password_confirm == ""){
-			alert("비밀번호 확인을 입력해 주세요.");
-			$("#password_confirm").focus();
-		}else if(password_confirm.replace( blank_pattern, '' ) == "" ){
-			alert("비밀번호 확인에 공백만 입력 되었습니다.");
-			$("#password_confirm").val("");
-			$("#password_confirm").focus();
-		}else if(password != password_confirm){
-			alert("비밀번호가 서로 다릅니다.");
-			$("#password").val("");
-			$("#password_confirm").val("");
-			$("#password").focus();
-		}else if(password =="${mdto.password}"){
-			alert("이전 비밀번호와 같습니다.");
-			$("#password").val("");
-			$("#password_confirm").val("");
-			$("#password").focus();
-		}
 		else{
 			$.post("/tupyo/admin_info_update", {
 				pk_id: pk_id,
 				id : id,
 				name: name,
-				password : password,
 				grade : authority
 			})
 			.done(function(msg){
@@ -135,8 +104,7 @@
 		
 	}
 	function log_view(){
-
-		
+		window.open()
 		 var form = $('<form></form>');
  	     form.attr('action', "/tupyo/admin_log_view");
  	     form.attr('method', 'post');
@@ -150,8 +118,6 @@
 </script>
 </head>
 <body>
-
-	
 	<table>
 		<tr>
 			<td>아이디</td>
@@ -160,14 +126,6 @@
 		<tr>
 			<td>이름</td>
 			<td><input type="text" id ="name" name="name" value="${mdto.name}" /></td>
-		</tr>
-		<tr>
-			<td>비밀번호</td>
-			<td><input type="password" id ="password" name="password" value="${mdto.password}" /></td>
-		</tr>
-		<tr>
-			<td>비밀번호 확인</td>
-			<td><input type="password" id ="password_confirm" name="password_confirm" value="${mdto.password}"/></td>
 		</tr>
 		<tr>
 			<td>권한</td>

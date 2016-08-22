@@ -1,4 +1,4 @@
-package com.ex.member;
+package com.ex.tupyo;
 
 import java.sql.Date;
 

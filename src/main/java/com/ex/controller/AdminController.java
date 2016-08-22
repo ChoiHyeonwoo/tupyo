@@ -1,4 +1,4 @@
-package com.ex.admin;
+package com.ex.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,9 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.ex.member.MemberDAO;
-import com.ex.member.MemberDTO;
-import com.ex.member.MemberLogDTO;
+import com.ex.dao.AdminDAO;
+import com.ex.dao.MemberDAO;
+import com.ex.tupyo.MemberDTO;
+import com.ex.tupyo.MemberLogDTO;
 
 
 
@@ -82,9 +83,7 @@ public class AdminController {
 		
 		model.addAttribute("mdtos", mdtos);
 		
-		
 		return "admin_main";
-	
 	}
 	@RequestMapping(value = "/admin_user_detail")
 	public String admin_user_detail(HttpServletRequest request, Model model){
@@ -125,11 +124,11 @@ public class AdminController {
 		String pk_id = request.getParameter("pk_id");
 		String id = request.getParameter("id");
 		String name = request.getParameter("name");
-		String password = request.getParameter("password");
+
 		String grade = request.getParameter("grade");
 		
 		AdminDAO adao = new AdminDAO();
-		String result = adao.user_info_update(pk_id, id, name, password, grade);
+		String result = adao.user_info_update(pk_id, id, name,  grade);
 		
 		try {
 			response.getWriter().print(result);
@@ -157,7 +156,6 @@ public class AdminController {
 		
 		model.addAttribute("request", request);
 		
-		
 		return "admin_member_register";
 	}
 	@RequestMapping(value = "/admin_logout")
@@ -172,5 +170,28 @@ public class AdminController {
 		request.getSession().invalidate();
 
 	}
+	@RequestMapping(value = "/admin_password_update")
+	public void admin_password_update(HttpServletResponse response, HttpServletRequest request, Model model){
+		
+		model.addAttribute("request", request);
+		String pk_id = request.getParameter("pk_id");
+		String password = request.getParameter("password");
+		AdminDAO adao = new AdminDAO();
+		String result = adao.user_password_update(pk_id,  password);
+		
+		try {
+			response.getWriter().print(result);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@RequestMapping(value = "/admin_password_modify")
+	public String admin_password_modify(HttpServletResponse response, HttpServletRequest request, Model model){
+		
+		model.addAttribute("request", request);
+		
+		
+		return "admin_password_modify";
 
+	}
 }

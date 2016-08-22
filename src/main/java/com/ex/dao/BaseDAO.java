@@ -1,4 +1,4 @@
-package com.ex.tupyo;
+package com.ex.dao;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+
+import com.ex.tupyo.MyTupyoContentNumberDTO;
+import com.ex.tupyo.TupyoDTO;
+import com.ex.tupyo.TupyoItemDTO;
+import com.ex.tupyo.TupyoMultiChecked;
 
 public class BaseDAO {
 

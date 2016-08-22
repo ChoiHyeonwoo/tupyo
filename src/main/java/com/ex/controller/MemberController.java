@@ -1,4 +1,4 @@
-package com.ex.member;
+package com.ex.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.ex.dao.MemberDAO;
+import com.ex.tupyo.MemberDTO;
+import com.ex.tupyo.MemberLogDTO;
 
 @Controller
 public class MemberController {
@@ -110,7 +114,7 @@ public class MemberController {
 				e.printStackTrace();
 			}
 			return;
-		}else if(mdtos.get(0).pk_mid == -1){
+		}else if(mdtos.get(0).getPk_mid() == -1){
 			try {
 				response.getWriter().print("drop");
 			} catch (IOException e) {
@@ -118,10 +122,10 @@ public class MemberController {
 			}
 		}
 		else {
-			request.getSession().setAttribute("pk_id", ""+mdtos.get(0).pk_mid);
-			request.getSession().setAttribute("id", mdtos.get(0).id);
-			request.getSession().setAttribute("name", mdtos.get(0).name);
-			request.getSession().setAttribute("grade", mdtos.get(0).grade);
+			request.getSession().setAttribute("pk_id", ""+mdtos.get(0).getPk_mid());
+			request.getSession().setAttribute("id", mdtos.get(0).getId());
+			request.getSession().setAttribute("name", mdtos.get(0).getName());
+			request.getSession().setAttribute("grade", mdtos.get(0).getGrade());
 			request.getSession().setMaxInactiveInterval(1200);
 			model.addAttribute("mdtos", mdtos);
 	

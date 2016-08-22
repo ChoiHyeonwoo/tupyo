@@ -22,7 +22,7 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.ex.tupyo" />
-	<context:component-scan base-package="com.ex.member" />
-	<context:component-scan base-package="com.ex.admin" />
+	<context:component-scan base-package="com.ex.dao" />
+	<context:component-scan base-package="com.ex.controller" />
 	
 </beans:beans>

@@ -32,16 +32,16 @@
 <script>
 
 	window.onload = function(){
-			var id = '<%=id%>';
+		var id = '<%=id%>';
 
-			if(id==''){
-				$("#log_check").html("로그인");
-				$("#log_check").attr("href", "/tupyo/m_login");
-				$("#member_check").html("회원가입하기");
-				$("#member_check").attr("href", "/tupyo/m_register");
-				$("#member_drop").hide();
-				$("#log_view").hide();
-				$("#password_change").hide();
+		if(id==''){
+			$("#log_check").html("로그인");
+			$("#log_check").attr("href", "/tupyo/m_login");
+			$("#member_check").html("회원가입하기");
+			$("#member_check").attr("href", "/tupyo/m_register");
+			$("#member_drop").hide();
+			$("#log_view").hide();
+			$("#password_change").hide();
 			}
 		var search_option = "<c:out value="${search_option}"></c:out>";	
 			if (search_option!=null && search_option!=""){
@@ -52,7 +52,7 @@
 	function expireSession()
 	{
 		alert("세션만료. 로그인을 다시 해주세요.");
-	  window.location = "/tupyo";
+	  	window.location = "/tupyo";
 	}
 	setTimeout('expireSession()', <%= request.getSession().getMaxInactiveInterval() * 1000 %>);
 		

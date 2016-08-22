@@ -1,8 +1,10 @@
-package com.ex.member;
+package com.ex.sessionlistener;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+
+import com.ex.dao.MemberDAO;
 
 public class MemberSessionListener implements HttpSessionListener {
 

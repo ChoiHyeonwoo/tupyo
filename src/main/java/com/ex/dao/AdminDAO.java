@@ -1,4 +1,4 @@
-package com.ex.admin;
+package com.ex.dao;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -6,10 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import com.ex.member.MemberDAO;
-import com.ex.member.MemberDTO;
-import com.ex.member.MemberLogDTO;
-import com.ex.tupyo.BaseDAO;
+import com.ex.tupyo.MemberDTO;
+import com.ex.tupyo.MemberLogDTO;
 
 public class AdminDAO extends BaseDAO {
 
@@ -216,18 +214,17 @@ public class AdminDAO extends BaseDAO {
 		
 		return result;
 	}
-	public String user_info_update(String pk_mid, String logid, String name, String password, String grade){
+	public String user_info_update(String pk_mid, String logid, String name, String grade){
 		String result="";
-		String query = "update chw_member set password=?, name=?, grade = ? where pk_mid=?";
+		String query = "update chw_member set name=?, grade = ? where pk_mid=?";
 		MemberDAO mdao = new MemberDAO();
 		try{
 			connection = super.dataSource.getConnection();
 			connection.setAutoCommit(false);
 			preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setString(1, password);
-			preparedStatement.setString(2, name);
-			preparedStatement.setInt(3, Integer.parseInt(grade));
-			preparedStatement.setInt(4, Integer.parseInt(pk_mid));
+			preparedStatement.setString(1, name);
+			preparedStatement.setInt(2, Integer.parseInt(grade));
+			preparedStatement.setInt(3, Integer.parseInt(pk_mid));
 
 			int rn = preparedStatement.executeUpdate();
 			
@@ -239,6 +236,51 @@ public class AdminDAO extends BaseDAO {
 				result="success";
 				connection.commit();
 				mdao.update_log(logid, "admin_info_update");
+			}
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}finally{
+			try{
+				// connection dispose
+				if(connection!=null){
+					connection.setAutoCommit(true);
+					connection.close();
+				}
+					
+				if(preparedStatement!=null)
+					preparedStatement.close();
+				if(resultSet!=null)
+					resultSet.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}	
+	public String user_password_update(String pk_mid, String password){
+		String result="";
+		String query = "update chw_member set password = ? where pk_mid=?";
+		MemberDAO mdao = new MemberDAO();
+		try{
+			connection = super.dataSource.getConnection();
+			connection.setAutoCommit(false);
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, password);
+			preparedStatement.setInt(3, Integer.parseInt(pk_mid));
+
+			int rn = preparedStatement.executeUpdate();
+			
+			if (rn > 1){
+				connection.rollback();
+				result = "fail";
+			}
+			else{
+				result="success";
+				connection.commit();
 			}
 			
 		}

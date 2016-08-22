@@ -1,4 +1,4 @@
-package com.ex.member;
+package com.ex.dao;
 
 import java.net.InetAddress;
 import java.sql.Connection;
@@ -7,7 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import com.ex.tupyo.BaseDAO;
+import com.ex.tupyo.MemberDTO;
+import com.ex.tupyo.MemberLogDTO;
 
 public class MemberDAO extends BaseDAO{
 	
